@@ -12,6 +12,72 @@ interface ConnectionsPageProps {
 export default function ConnectionsPage({ onNavigateToHome, onNavigateToActivities, onNavigateToCalendar, onNavigateToData , onNavigateToSettings }: ConnectionsPageProps) {
   const [isCareTeamExpanded, setIsCareTeamExpanded] = useState(true);
   const [isFeedbackExpanded, setIsFeedbackExpanded] = useState(true);
+  const [activeMessageMember, setActiveMessageMember] = useState<null | {
+    name: string;
+    role: string;
+  }>(null);
+  const [messageText, setMessageText] = useState('');
+  const [activeProfileMember, setActiveProfileMember] = useState<null | {
+    name: string;
+    role: string;
+    status: string;
+    specialty: string;
+    contact: string;
+    nextStep: string;
+  }>(null);
+  const [feedbackItems, setFeedbackItems] = useState([
+    {
+      id: 'feedback-1',
+      initials: 'AF',
+      author: 'Dr. Alistair Finch',
+      date: 'Mar 25, 2026',
+      title: 'Weekly Assessment Review',
+      body: 'Your sleep patterns have shown great improvement this week. I recommend continuing the mindfulness meditation before bed. We can discuss your symptom tracking in our next session.',
+      acknowledged: false,
+      replyRole: 'Clinical Psychologist',
+      muted: false,
+    },
+    {
+      id: 'feedback-2',
+      initials: 'SC',
+      author: 'Sarah Chen',
+      date: 'Mar 20, 2026',
+      title: 'Physical Therapy Notes',
+      body: "Please remember to keep your posture straight during the desk exercises we practiced. Don't push past the point of pain.",
+      acknowledged: false,
+      replyRole: 'Occupational Therapist',
+      muted: true,
+    },
+  ]);
+  const [activeReplyFeedback, setActiveReplyFeedback] = useState<null | {
+    id: string;
+    author: string;
+    role: string;
+  }>(null);
+  const [replyText, setReplyText] = useState('');
+
+  const careTeamMembers = [
+    {
+      id: 'doctor-alistair',
+      name: 'Dr. Alistair Finch',
+      role: 'Clinical Psychologist',
+      status: 'Online now',
+      specialty: 'Anxiety, stress, and CBT-based care',
+      contact: 'alistair.finch@careteam.health',
+      nextStep: 'Weekly therapy review every Tuesday at 2:00 PM',
+      indicator: 'online',
+    },
+    {
+      id: 'sarah-chen',
+      name: 'Sarah Chen',
+      role: 'Occupational Therapist',
+      status: 'Next Appt: Tomorrow 11am',
+      specialty: 'Routine planning and functional recovery',
+      contact: 'sarah.chen@careteam.health',
+      nextStep: 'Follow-up on desk routine and posture goals tomorrow',
+      indicator: 'scheduled',
+    },
+  ] as const;
 
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
@@ -66,75 +132,61 @@ export default function ConnectionsPage({ onNavigateToHome, onNavigateToActiviti
         {/* Care Team Members - Collapsible */}
         {isCareTeamExpanded && (
           <div className="space-y-4 mb-6">
-            {/* Dr. Alistair Finch Card */}
-            <div className="bg-white rounded-2xl shadow-md p-4">
-              <div className="flex items-start gap-4">
-                <div className="relative flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-gray-300 overflow-hidden">
-                    <svg className="w-full h-full text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-                      <circle cx="12" cy="8" r="4" />
-                      <path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" />
-                    </svg>
+            {careTeamMembers.map(member => (
+              <div key={member.id} className="bg-white rounded-2xl shadow-md p-4">
+                <div className="flex items-start gap-4">
+                  <div className="relative flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full bg-gray-300 overflow-hidden">
+                      <svg className="w-full h-full text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" />
+                      </svg>
+                    </div>
+                    {member.indicator === 'online' ? (
+                      <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    ) : null}
                   </div>
-                  <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                </div>
 
-                <div className="flex-1">
-                  <h3 className="text-lg">Dr. Alistair Finch</h3>
-                  <p className="text-sm text-gray-600">Clinical Psychologist</p>
-                  <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    online
-                  </p>
-                </div>
-
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="flex gap-3 mt-4">
-                <button className="flex-1 bg-[#F5F1E8] text-gray-700 py-3 rounded-full hover:bg-[#ece8df] transition-colors">
-                  Message
-                </button>
-                <button className="flex-1 bg-[#F5F1E8] text-gray-700 py-3 rounded-full hover:bg-[#ece8df] transition-colors">
-                  View Profile
-                </button>
-              </div>
-            </div>
-
-            {/* Sarah Chen Card */}
-            <div className="bg-white rounded-2xl shadow-md p-4">
-              <div className="flex items-start gap-4">
-                <div className="relative flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full bg-gray-300 overflow-hidden">
-                    <svg className="w-full h-full text-gray-400" viewBox="0 0 24 24" fill="currentColor">
-                      <circle cx="12" cy="8" r="4" />
-                      <path d="M12 14c-4 0-7 2-7 4v2h14v-2c0-2-3-4-7-4z" />
-                    </svg>
+                  <div className="flex-1">
+                    <h3 className="text-lg">{member.name}</h3>
+                    <p className="text-sm text-gray-600">{member.role}</p>
+                    <p className={`text-sm mt-1 ${member.indicator === 'online' ? 'text-green-600 flex items-center gap-1' : 'text-gray-600'}`}>
+                      {member.indicator === 'online' ? <span className="w-2 h-2 bg-green-500 rounded-full"></span> : null}
+                      {member.status}
+                    </p>
                   </div>
+
+                  <button className="text-gray-400 hover:text-gray-600">
+                    <MoreVertical className="w-5 h-5" />
+                  </button>
                 </div>
 
-                <div className="flex-1">
-                  <h3 className="text-lg">Sarah Chen</h3>
-                  <p className="text-sm text-gray-600">Occupational Therapist</p>
-                  <p className="text-sm text-gray-600 mt-1">Next Appt: Tomorrow 11am</p>
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => {
+                      setActiveMessageMember({ name: member.name, role: member.role });
+                      setMessageText('');
+                    }}
+                    className="flex-1 bg-[#F5F1E8] text-gray-700 py-3 rounded-full hover:bg-[#ece8df] transition-colors"
+                  >
+                    Message
+                  </button>
+                  <button
+                    onClick={() => setActiveProfileMember({
+                      name: member.name,
+                      role: member.role,
+                      status: member.status,
+                      specialty: member.specialty,
+                      contact: member.contact,
+                      nextStep: member.nextStep,
+                    })}
+                    className="flex-1 bg-[#F5F1E8] text-gray-700 py-3 rounded-full hover:bg-[#ece8df] transition-colors"
+                  >
+                    View Profile
+                  </button>
                 </div>
-
-                <button className="text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-5 h-5" />
-                </button>
               </div>
-
-              <div className="flex gap-3 mt-4">
-                <button className="flex-1 bg-[#F5F1E8] text-gray-700 py-3 rounded-full hover:bg-[#ece8df] transition-colors">
-                  Message
-                </button>
-                <button className="flex-1 bg-[#F5F1E8] text-gray-700 py-3 rounded-full hover:bg-[#ece8df] transition-colors">
-                  View Profile
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         )}
 
@@ -156,50 +208,182 @@ export default function ConnectionsPage({ onNavigateToHome, onNavigateToActiviti
         
         {isFeedbackExpanded && (
           <div className="space-y-4">
-          {/* Feedback Card 1 */}
-          <div className="bg-white rounded-2xl shadow-sm p-5 border-l-4 border-[color:var(--theme-primary)] relative">
-            <div className="flex justify-between items-start mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-[#F5F1E8] flex items-center justify-center text-[color:var(--theme-primary)] font-bold text-sm">
-                  AF
+            {feedbackItems.map(item => (
+              <div
+                key={item.id}
+                className={`bg-white rounded-2xl shadow-sm p-5 border-l-4 ${item.muted ? 'border-gray-300 opacity-80 hover:opacity-100 transition-opacity' : 'border-[color:var(--theme-primary)] relative'}`}
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${item.muted ? 'bg-gray-100 text-gray-500' : 'bg-[#F5F1E8] text-[color:var(--theme-primary)]'}`}>
+                      {item.initials}
+                    </div>
+                    <h3 className={`font-semibold text-sm ${item.muted ? 'text-gray-600' : 'text-gray-800'}`}>{item.author}</h3>
+                  </div>
+                  <span className={`text-xs px-2 py-1 rounded-full border border-gray-100 ${item.muted ? 'text-gray-400 bg-gray-50' : 'text-gray-500 bg-gray-50 shadow-sm'}`}>{item.date}</span>
                 </div>
-                <h3 className="font-semibold text-gray-800 text-sm">Dr. Alistair Finch</h3>
-              </div>
-              <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full border border-gray-100 shadow-sm">Mar 25, 2026</span>
-            </div>
-            <h4 className="font-medium text-gray-800 mb-2">Weekly Assessment Review</h4>
-            <p className="text-gray-600 text-sm leading-relaxed mb-4">
-              Your sleep patterns have shown great improvement this week. I recommend continuing the mindfulness meditation before bed. We can discuss your symptom tracking in our next session.
-            </p>
-            <div className="flex gap-2">
-               <button className="bg-[#F5F1E8] text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-[#e2ddd3] transition-colors">
-                 Acknowledge
-               </button>
-               <button className="text-[color:var(--theme-primary)] bg-[color:var(--theme-primary)]/10 px-4 py-2 rounded-full text-sm font-medium hover:bg-[color:var(--theme-primary)]/20 transition-colors">
-                 Reply
-               </button>
-            </div>
-          </div>
-
-          {/* Feedback Card 2 */}
-          <div className="bg-white rounded-2xl shadow-sm p-5 border-l-4 border-gray-300 opacity-80 hover:opacity-100 transition-opacity">
-            <div className="flex justify-between items-start mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm">
-                  SC
+                <h4 className={`font-medium mb-2 ${item.muted ? 'text-gray-700' : 'text-gray-800'}`}>{item.title}</h4>
+                <p className={`text-sm leading-relaxed ${item.muted ? 'text-gray-500' : 'text-gray-600'} ${item.acknowledged ? 'mb-3' : 'mb-4'}`}>
+                  {item.body}
+                </p>
+                {item.acknowledged ? (
+                  <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    Acknowledged
+                  </div>
+                ) : null}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFeedbackItems((prev) => prev.map((feedback) => feedback.id === item.id ? { ...feedback, acknowledged: true } : feedback))}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${item.acknowledged ? 'bg-emerald-100 text-emerald-700' : 'bg-[#F5F1E8] text-gray-700 hover:bg-[#e2ddd3]'}`}
+                  >
+                    {item.acknowledged ? 'Acknowledged' : 'Acknowledge'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      setActiveReplyFeedback({ id: item.id, author: item.author, role: item.replyRole });
+                      setReplyText('');
+                    }}
+                    className="text-[color:var(--theme-primary)] bg-[color:var(--theme-primary)]/10 px-4 py-2 rounded-full text-sm font-medium hover:bg-[color:var(--theme-primary)]/20 transition-colors"
+                  >
+                    Reply
+                  </button>
                 </div>
-                <h3 className="font-semibold text-gray-600 text-sm">Sarah Chen</h3>
               </div>
-              <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full border border-gray-100">Mar 20, 2026</span>
-            </div>
-            <h4 className="font-medium text-gray-700 mb-2">Physical Therapy Notes</h4>
-            <p className="text-gray-500 text-sm leading-relaxed">
-              Please remember to keep your posture straight during the desk exercises we practiced. Don't push past the point of pain.
-            </p>
+            ))}
           </div>
-        </div>
         )}
       </main>
+
+      {activeMessageMember && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm p-0 sm:items-center" onClick={() => setActiveMessageMember(null)}>
+          <div className="w-full max-w-md rounded-t-3xl bg-white p-6 shadow-2xl sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Message {activeMessageMember.name}</h3>
+                <p className="mt-1 text-sm text-gray-500">{activeMessageMember.role}</p>
+              </div>
+              <button onClick={() => setActiveMessageMember(null)} className="rounded-full bg-gray-50 p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                <ChevronRight className="w-5 h-5 rotate-45" />
+              </button>
+            </div>
+
+            <textarea
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              placeholder="Type your message here..."
+              className="mt-5 h-32 w-full rounded-2xl border border-gray-200 bg-[#F9F7F4] p-4 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--theme-primary)]/20"
+            />
+
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => setActiveMessageMember(null)}
+                className="flex-1 rounded-full border border-gray-200 bg-white py-3 font-medium text-gray-600 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (messageText.trim()) {
+                    setMessageText('');
+                    setActiveMessageMember(null);
+                  }
+                }}
+                disabled={!messageText.trim()}
+                className="flex-1 rounded-full bg-[color:var(--theme-primary)] py-3 font-medium text-white hover:bg-[color:var(--theme-secondary)] disabled:opacity-50"
+              >
+                Send Message
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeProfileMember && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm p-0 sm:items-center" onClick={() => setActiveProfileMember(null)}>
+          <div className="w-full max-w-md rounded-t-3xl bg-white p-6 shadow-2xl sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">{activeProfileMember.name}</h3>
+                <p className="mt-1 text-sm text-gray-500">{activeProfileMember.role}</p>
+              </div>
+              <button onClick={() => setActiveProfileMember(null)} className="rounded-full bg-gray-50 p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                <ChevronRight className="w-5 h-5 rotate-45" />
+              </button>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              <div className="rounded-2xl bg-[#F9F7F4] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Status</p>
+                <p className="mt-1 text-sm font-medium text-gray-700">{activeProfileMember.status}</p>
+              </div>
+              <div className="rounded-2xl bg-[#F9F7F4] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Specialty</p>
+                <p className="mt-1 text-sm font-medium text-gray-700">{activeProfileMember.specialty}</p>
+              </div>
+              <div className="rounded-2xl bg-[#F9F7F4] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Contact</p>
+                <p className="mt-1 text-sm font-medium text-gray-700">{activeProfileMember.contact}</p>
+              </div>
+              <div className="rounded-2xl bg-[#F9F7F4] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Next Step</p>
+                <p className="mt-1 text-sm font-medium text-gray-700">{activeProfileMember.nextStep}</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setActiveProfileMember(null)}
+              className="mt-5 w-full rounded-full bg-[color:var(--theme-primary)] py-3 font-medium text-white hover:bg-[color:var(--theme-secondary)]"
+            >
+              Close Profile
+            </button>
+          </div>
+        </div>
+      )}
+
+      {activeReplyFeedback && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm p-0 sm:items-center" onClick={() => setActiveReplyFeedback(null)}>
+          <div className="w-full max-w-md rounded-t-3xl bg-white p-6 shadow-2xl sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Reply to {activeReplyFeedback.author}</h3>
+                <p className="mt-1 text-sm text-gray-500">{activeReplyFeedback.role}</p>
+              </div>
+              <button onClick={() => setActiveReplyFeedback(null)} className="rounded-full bg-gray-50 p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                <ChevronRight className="w-5 h-5 rotate-45" />
+              </button>
+            </div>
+
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write your reply here..."
+              className="mt-5 h-32 w-full rounded-2xl border border-gray-200 bg-[#F9F7F4] p-4 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[color:var(--theme-primary)]/20"
+            />
+
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => setActiveReplyFeedback(null)}
+                className="flex-1 rounded-full border border-gray-200 bg-white py-3 font-medium text-gray-600 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (replyText.trim()) {
+                    setReplyText('');
+                    setActiveReplyFeedback(null);
+                  }
+                }}
+                disabled={!replyText.trim()}
+                className="flex-1 rounded-full bg-[color:var(--theme-primary)] py-3 font-medium text-white hover:bg-[color:var(--theme-secondary)] disabled:opacity-50"
+              >
+                Send Reply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
