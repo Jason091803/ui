@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Bell, Home, Users, ListChecks, Calendar, Settings as SettingsIcon, BarChart3, ChevronRight, User, Lock, Shield, MessageSquare, LogOut, X, CheckCircle, Send, Palette } from 'lucide-react';
+import { ArrowLeft, Bell, Home, Users, ListChecks, Calendar, Settings as SettingsIcon, BarChart3, ChevronRight, User, Lock, Shield, MessageSquare, LogOut, X, CheckCircle, Send, Palette, CheckSquare } from 'lucide-react';
 
 interface SettingsPageProps {
   variant?: 'patient' | 'doctor';
@@ -486,7 +486,7 @@ export default function SettingsPage({
               <span className="text-xs">Feedback</span>
             </button>
           ) : null}
-          {!isDoctor ? (
+          {isDoctor ? (
             <button
               onClick={onNavigateToCalendar}
               className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"
@@ -494,7 +494,15 @@ export default function SettingsPage({
               <Calendar className="w-6 h-6" />
               <span className="text-xs">Calendar</span>
             </button>
-          ) : null}
+          ) : (
+            <button
+              onClick={onNavigateToCalendar}
+              className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"
+            >
+              <Calendar className="w-6 h-6" />
+              <span className="text-xs">Calendar</span>
+            </button>
+          )}
           <button
             onClick={onNavigateToData}
             className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"

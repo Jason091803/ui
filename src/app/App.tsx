@@ -19,9 +19,10 @@ import DoctorClientsPage from './components/DoctorClientsPage';
 import DoctorActivitiesPage from './components/DoctorActivitiesPage';
 import DoctorDataPage from './components/DoctorDataPage';
 import DoctorFeedbackPage from './components/DoctorFeedbackPage';
+import DoctorCalendarPage from './components/DoctorCalendarPage';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset' | 'terms-of-service' | 'privacy-policy' | 'home' | 'doctor-home' | 'doctor-clients' | 'doctor-activities' | 'doctor-feedback' | 'doctor-data' | 'doctor-settings' | 'full-symptom-list' | 'connections' | 'activities' | 'calendar' | 'data' | 'settings'>('login');
+  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset' | 'terms-of-service' | 'privacy-policy' | 'home' | 'doctor-home' | 'doctor-clients' | 'doctor-activities' | 'doctor-feedback' | 'doctor-calendar' | 'doctor-data' | 'doctor-settings' | 'full-symptom-list' | 'connections' | 'activities' | 'calendar' | 'data' | 'settings'>('login');
   const [doctorActivitiesLaunchAction, setDoctorActivitiesLaunchAction] = useState<'assign' | 'ai-create' | null>(null);
   const [patientName, setPatientName] = useState('Jason');
   const [doctorName, setDoctorName] = useState('testclinician');
@@ -66,6 +67,7 @@ export default function App() {
              setCurrentPage('doctor-activities');
            }}
            onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToCalendar={() => setCurrentPage('doctor-calendar')}
            onNavigateToData={() => setCurrentPage('doctor-data')}
            onNavigateToSettings={() => setCurrentPage('doctor-settings')}
         />
@@ -77,6 +79,7 @@ export default function App() {
              setCurrentPage('doctor-activities');
            }}
            onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToCalendar={() => setCurrentPage('doctor-calendar')}
            onNavigateToData={() => setCurrentPage('doctor-data')}
            onNavigateToSettings={() => setCurrentPage('doctor-settings')}
         />
@@ -86,6 +89,7 @@ export default function App() {
            onNavigateToHome={() => setCurrentPage('doctor-home')}
            onNavigateToClients={() => setCurrentPage('doctor-clients')}
            onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToCalendar={() => setCurrentPage('doctor-calendar')}
            onNavigateToData={() => setCurrentPage('doctor-data')}
            onNavigateToSettings={() => setCurrentPage('doctor-settings')}
         />
@@ -97,6 +101,19 @@ export default function App() {
             setDoctorActivitiesLaunchAction(null);
             setCurrentPage('doctor-activities');
           }}
+          onNavigateToCalendar={() => setCurrentPage('doctor-calendar')}
+          onNavigateToData={() => setCurrentPage('doctor-data')}
+          onNavigateToSettings={() => setCurrentPage('doctor-settings')}
+        />
+      ) : currentPage === 'doctor-calendar' ? (
+        <DoctorCalendarPage
+          onNavigateToHome={() => setCurrentPage('doctor-home')}
+          onNavigateToClients={() => setCurrentPage('doctor-clients')}
+          onNavigateToActivities={() => {
+            setDoctorActivitiesLaunchAction(null);
+            setCurrentPage('doctor-activities');
+          }}
+          onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
           onNavigateToData={() => setCurrentPage('doctor-data')}
           onNavigateToSettings={() => setCurrentPage('doctor-settings')}
         />
@@ -109,6 +126,7 @@ export default function App() {
              setCurrentPage('doctor-activities');
            }}
            onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToCalendar={() => setCurrentPage('doctor-calendar')}
            onNavigateToSettings={() => setCurrentPage('doctor-settings')}
         />
       ) : currentPage === 'doctor-settings' ? (
@@ -122,6 +140,7 @@ export default function App() {
             setCurrentPage('doctor-activities');
           }}
           onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+          onNavigateToCalendar={() => setCurrentPage('doctor-calendar')}
           onNavigateToData={() => setCurrentPage('doctor-data')}
           onNavigateToLogin={() => setCurrentPage('login')}
         />

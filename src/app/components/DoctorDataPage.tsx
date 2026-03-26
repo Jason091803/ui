@@ -6,10 +6,11 @@ interface DoctorDataPageProps {
   onNavigateToClients: () => void;
   onNavigateToActivities: () => void;
   onNavigateToFeedback: () => void;
+  onNavigateToCalendar: () => void;
   onNavigateToSettings: () => void;
 }
 
-export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, onNavigateToActivities, onNavigateToFeedback, onNavigateToSettings }: DoctorDataPageProps) {
+export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, onNavigateToActivities, onNavigateToFeedback, onNavigateToCalendar, onNavigateToSettings }: DoctorDataPageProps) {
   const [selectedClient, setSelectedClient] = useState('Emma L.');
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const todayTimelineDate = '2026-03-26';
@@ -329,6 +330,10 @@ export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, 
           <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-14">
             <CheckSquare className="w-[22px] h-[22px]" />
             <span className="text-[11px] font-semibold">Feedback</span>
+          </button>
+          <button onClick={onNavigateToCalendar} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-14">
+            <CalendarIcon className="w-[22px] h-[22px]" />
+            <span className="text-[11px] font-semibold">Calendar</span>
           </button>
           <button className="flex flex-col items-center gap-1.5 text-[color:var(--theme-primary)] w-14 group">
             <div className="relative">

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogOut, Home, Users, ListChecks, CheckSquare, Settings, ChevronRight, AlertTriangle, Circle, Bell, BarChart3, Sparkles } from 'lucide-react';
+import { LogOut, Home, Users, ListChecks, CheckSquare, Settings, ChevronRight, AlertTriangle, Circle, Bell, BarChart3, Sparkles, Calendar } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 import femaleIcon1 from '../../assets/d2b0f8035a26d66fec4fcf46ab741ed497858fb8.png'; // Sample avatar replacements
@@ -13,11 +13,12 @@ interface DoctorHomePageProps {
   onNavigateToConnections?: () => void;
   onNavigateToActivities?: (action?: 'assign' | 'ai-create') => void;
   onNavigateToFeedback?: () => void;
+  onNavigateToCalendar?: () => void;
   onNavigateToData?: () => void;
   onNavigateToSettings?: () => void;
 }
 
-export default function DoctorHomePage({ doctorName, onNavigateToLogin, onNavigateToConnections, onNavigateToActivities, onNavigateToFeedback, onNavigateToData, onNavigateToSettings }: DoctorHomePageProps) {
+export default function DoctorHomePage({ doctorName, onNavigateToLogin, onNavigateToConnections, onNavigateToActivities, onNavigateToFeedback, onNavigateToCalendar, onNavigateToData, onNavigateToSettings }: DoctorHomePageProps) {
   const [activeTab, setActiveTab] = useState<'Mood' | 'Sleep' | 'Activity' | 'Symptoms' | 'Medication'>('Mood');
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const [infoModalClient, setInfoModalClient] = useState<string | null>(null);
@@ -483,6 +484,11 @@ export default function DoctorHomePage({ doctorName, onNavigateToLogin, onNaviga
           <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-16">
             <CheckSquare className="w-[22px] h-[22px]" />
             <span className="text-[11px] font-semibold">Feedback</span>
+          </button>
+
+          <button onClick={onNavigateToCalendar} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-16">
+            <Calendar className="w-[22px] h-[22px]" />
+            <span className="text-[11px] font-semibold">Calendar</span>
           </button>
 
           <button onClick={onNavigateToData} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-16">

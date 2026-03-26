@@ -6,11 +6,12 @@ interface DoctorActivitiesPageProps {
   onNavigateToHome: () => void;
   onNavigateToClients?: () => void;
   onNavigateToFeedback?: () => void;
+  onNavigateToCalendar?: () => void;
   onNavigateToData?: () => void;
   onNavigateToSettings?: () => void;
 }
 
-export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, onNavigateToClients, onNavigateToFeedback, onNavigateToData, onNavigateToSettings }: DoctorActivitiesPageProps) {
+export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, onNavigateToClients, onNavigateToFeedback, onNavigateToCalendar, onNavigateToData, onNavigateToSettings }: DoctorActivitiesPageProps) {
   const [filter, setFilter] = useState<'total' | 'assigned' | 'templates'>('assigned');
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -470,6 +471,11 @@ export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, 
           <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
             <CheckSquare className="w-[22px] h-[22px]" />
             <span className="text-[11px] font-semibold">Feedback</span>
+          </button>
+
+          <button onClick={onNavigateToCalendar} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
+            <CalendarIcon className="w-[22px] h-[22px]" />
+            <span className="text-[11px] font-semibold">Calendar</span>
           </button>
 
           <button onClick={onNavigateToData} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">

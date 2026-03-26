@@ -7,6 +7,7 @@ interface DoctorSettingsPageProps {
   onNavigateToConnections?: () => void;
   onNavigateToActivities?: () => void;
   onNavigateToFeedback?: () => void;
+  onNavigateToCalendar?: () => void;
   onNavigateToData?: () => void;
   onNavigateToLogin?: () => void;
 }

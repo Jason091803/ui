@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Clock, BarChart3 } from 'lucide-react';
+import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Clock, BarChart3, Calendar as CalendarIcon } from 'lucide-react';
 
 import femaleIcon1 from '../../assets/d2b0f8035a26d66fec4fcf46ab741ed497858fb8.png'; 
 import maleIcon1 from '../../assets/b2c1ba502535293778a6e73cdc21c311f5e2c010.png';
@@ -9,11 +9,12 @@ interface DoctorClientsPageProps {
   onNavigateToHome: () => void;
   onNavigateToActivities?: () => void;
   onNavigateToFeedback?: () => void;
+  onNavigateToCalendar?: () => void;
   onNavigateToData?: () => void;
   onNavigateToSettings?: () => void;
 }
 
-export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivities, onNavigateToFeedback, onNavigateToData, onNavigateToSettings }: DoctorClientsPageProps) {
+export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivities, onNavigateToFeedback, onNavigateToCalendar, onNavigateToData, onNavigateToSettings }: DoctorClientsPageProps) {
   const [filter, setFilter] = useState<'attention' | 'track' | 'completed' | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedClient, setSelectedClient] = useState<any | null>(null);
@@ -449,6 +450,11 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
           <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
             <CheckSquare className="w-[22px] h-[22px]" />
             <span className="text-[11px] font-semibold">Feedback</span>
+          </button>
+
+          <button onClick={onNavigateToCalendar} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
+            <CalendarIcon className="w-[22px] h-[22px]" />
+            <span className="text-[11px] font-semibold">Calendar</span>
           </button>
 
           <button onClick={onNavigateToData} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
