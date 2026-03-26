@@ -6,6 +6,7 @@ interface ActivitiesPageProps {
   onNavigateToConnections?: () => void;
   onNavigateToCalendar?: () => void;
   onNavigateToData?: () => void;
+  onNavigateToSettings?: () => void;
 }
 
 interface Activity {
@@ -20,7 +21,7 @@ interface Activity {
   remainingTime?: number;
 }
 
-export default function ActivitiesPage({ onNavigateToHome, onNavigateToConnections, onNavigateToCalendar, onNavigateToData }: ActivitiesPageProps) {
+export default function ActivitiesPage({ onNavigateToHome, onNavigateToConnections, onNavigateToCalendar, onNavigateToData , onNavigateToSettings }: ActivitiesPageProps) {
   const [isToDoExpanded, setIsToDoExpanded] = useState(true);
   const [isCompletedExpanded, setIsCompletedExpanded] = useState(true);
   const [isAllExpanded, setIsAllExpanded] = useState(true);
@@ -169,7 +170,7 @@ export default function ActivitiesPage({ onNavigateToHome, onNavigateToConnectio
                   <p className="text-sm text-gray-600">{activity.isRunning && activity.remainingTime !== undefined ? `Time remaining: ${activity.remainingTime}s` : `Time: ${activity.time}`}</p>
                   <p className="text-sm text-gray-600">Duration: {activity.duration} sec.</p>
                 </div>
-                <button onClick={() => handleStart(activity.id)} disabled={activity.isRunning} className={`px-6 py-2 rounded-full flex items-center gap-2 transition-colors ${activity.isRunning ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#6B46C1] text-white hover:bg-[#5a3ba3]'}`}>
+                <button onClick={() => handleStart(activity.id)} disabled={activity.isRunning} className={`px-6 py-2 rounded-full flex items-center gap-2 transition-colors ${activity.isRunning ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[color:var(--theme-primary)] text-white hover:bg-[color:var(--theme-secondary)]'}`}>
                   {activity.isRunning ? <span className="text-sm">Running...</span> : <><span className="text-sm">Start</span><Play className="w-4 h-4 fill-current" /></>}
                 </button>
               </div>
@@ -222,7 +223,7 @@ export default function ActivitiesPage({ onNavigateToHome, onNavigateToConnectio
                     <span className="text-white text-xl">✓</span>
                   </div>
                 ) : (
-                  <button onClick={() => handleStart(activity.id)} disabled={activity.isRunning} className={`px-6 py-2 rounded-full flex items-center gap-2 transition-colors ${activity.isRunning ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#6B46C1] text-white hover:bg-[#5a3ba3]'}`}>
+                  <button onClick={() => handleStart(activity.id)} disabled={activity.isRunning} className={`px-6 py-2 rounded-full flex items-center gap-2 transition-colors ${activity.isRunning ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[color:var(--theme-primary)] text-white hover:bg-[color:var(--theme-secondary)]'}`}>
                     {activity.isRunning ? <span className="text-sm">Running...</span> : <><span className="text-sm">Start</span><Play className="w-4 h-4 fill-current" /></>}
                   </button>
                 )}
@@ -242,7 +243,7 @@ export default function ActivitiesPage({ onNavigateToHome, onNavigateToConnectio
             <Users className="w-6 h-6" />
             <span className="text-xs">Connections</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-[#6B46C1]">
+          <button className="flex flex-col items-center gap-1 text-[color:var(--theme-primary)]">
             <ListChecks className="w-6 h-6" />
             <span className="text-xs">Activities</span>
           </button>
@@ -254,7 +255,10 @@ export default function ActivitiesPage({ onNavigateToHome, onNavigateToConnectio
             <BarChart3 className="w-6 h-6" />
             <span className="text-xs">Data</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-gray-400">
+          <button
+            onClick={onNavigateToSettings}
+            className="flex flex-col items-center gap-1 text-gray-400 transition-colors hover:text-gray-600"
+          >
             <Settings className="w-6 h-6" />
             <span className="text-xs">Settings</span>
           </button>

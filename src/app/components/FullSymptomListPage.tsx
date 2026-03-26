@@ -63,9 +63,9 @@ export default function FullSymptomListPage({ onNavigateBack }: FullSymptomListP
 
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
-      <header className="bg-[#6B46C1] text-white py-4 px-4 flex items-center justify-between sticky top-0 z-10">
+      <header className="bg-[color:var(--theme-primary)] text-white py-4 px-4 flex items-center justify-between sticky top-0 z-10">
         <h1 className="text-xl flex-1 text-center">Full Symptom List</h1>
-        <button onClick={onNavigateBack} className="text-white hover:bg-[#5a3ba3] p-1 rounded">
+        <button onClick={onNavigateBack} className="text-white hover:bg-[color:var(--theme-secondary)] p-1 rounded">
           <X className="w-6 h-6" />
         </button>
       </header>
@@ -82,7 +82,7 @@ export default function FullSymptomListPage({ onNavigateBack }: FullSymptomListP
                 onClick={() => toggleSymptom(symptom.id)}
                 className={`px-4 py-3 rounded-lg text-sm text-left transition-all ${
                   selectedSymptoms.includes(symptom.id)
-                    ? 'bg-[#6B46C1] text-white'
+                    ? 'bg-[color:var(--theme-primary)] text-white'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
@@ -106,7 +106,7 @@ export default function FullSymptomListPage({ onNavigateBack }: FullSymptomListP
                   value={otherSymptom}
                   onChange={(e) => setOtherSymptom(e.target.value)}
                   placeholder="Enter your symptoms here..."
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[#6B46C1] focus:ring-2 focus:ring-[#6B46C1] focus:ring-opacity-20 outline-none resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-[color:var(--theme-primary)] focus:ring-2 focus:ring-[color:var(--theme-primary)] focus:ring-opacity-20 outline-none resize-none"
                   rows={3}
                 />
               </div>
@@ -120,7 +120,7 @@ export default function FullSymptomListPage({ onNavigateBack }: FullSymptomListP
           <div className="max-w-2xl mx-auto">
             <button
               onClick={handleSubmit}
-              className="w-full bg-[#6B46C1] text-white py-4 rounded-lg hover:bg-[#5a3ba3] transition-colors text-lg"
+              className="w-full bg-[color:var(--theme-primary)] text-white py-4 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors text-lg"
             >
               Submit
             </button>

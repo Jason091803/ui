@@ -1,28 +1,17 @@
 import { useState } from 'react';
-import { ArrowLeft, Search, MoreVertical, Home, Users, ListChecks, Calendar, Settings, ChevronDown, ChevronUp, Send, ChevronRight, CheckCircle, BarChart3 } from 'lucide-react';
-import lightbulbIcon from '../../assets/f0473e7ef1f176f5b3ec43d0d8ac7fcbcc263b51.png';
+import { ArrowLeft, Search, MoreVertical, Home, Users, ListChecks, Calendar, Settings, ChevronDown, ChevronUp, ChevronRight, BarChart3 } from 'lucide-react';
 
 interface ConnectionsPageProps {
   onNavigateToHome: () => void;
   onNavigateToActivities?: () => void;
   onNavigateToCalendar?: () => void;
   onNavigateToData?: () => void;
+  onNavigateToSettings?: () => void;
 }
 
-export default function ConnectionsPage({ onNavigateToHome, onNavigateToActivities, onNavigateToCalendar, onNavigateToData }: ConnectionsPageProps) {
+export default function ConnectionsPage({ onNavigateToHome, onNavigateToActivities, onNavigateToCalendar, onNavigateToData , onNavigateToSettings }: ConnectionsPageProps) {
   const [isCareTeamExpanded, setIsCareTeamExpanded] = useState(true);
-  const [isFeedbackExpanded, setIsFeedbackExpanded] = useState(false);
-  const [feedback, setFeedback] = useState('');
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-
-  const handleSubmitFeedback = () => {
-    setShowSuccessMessage(true);
-    setTimeout(() => {
-      setShowSuccessMessage(false);
-      setIsFeedbackExpanded(false);
-      setFeedback('');
-    }, 2000);
-  };
+  const [isFeedbackExpanded, setIsFeedbackExpanded] = useState(true);
 
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
@@ -44,7 +33,7 @@ export default function ConnectionsPage({ onNavigateToHome, onNavigateToActiviti
             placeholder="Search users..."
             className="w-full pl-12 pr-24 py-3 rounded-full bg-white border border-gray-200 text-gray-700 placeholder:text-gray-400"
           />
-          <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#6B46C1] text-white px-6 py-2 rounded-full text-sm hover:bg-[#5a3ba3] transition-colors">
+          <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-[color:var(--theme-primary)] text-white px-6 py-2 rounded-full text-sm hover:bg-[color:var(--theme-secondary)] transition-colors">
             Search
           </button>
         </div>
@@ -143,59 +132,66 @@ export default function ConnectionsPage({ onNavigateToHome, onNavigateToActiviti
           </div>
         )}
 
-        {/* Feedback Section */}
-        {!isFeedbackExpanded ? (
+        {/* Doctor's Feedback Section */}
+        <div className="flex items-center justify-between mt-8 mb-4">
+          <h2 className="text-xl text-gray-800">Doctor's Feedback</h2>
           <button
-            onClick={() => setIsFeedbackExpanded(true)}
-            className="w-full bg-gradient-to-br from-[#D8CEF0] to-[#C8BDE5] rounded-3xl shadow-lg p-5 flex items-center gap-4 hover:shadow-xl transition-all border border-[#B5A5D8]/30"
+            onClick={() => setIsFeedbackExpanded(!isFeedbackExpanded)}
+            className="text-gray-600 hover:text-gray-800 p-1 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label={isFeedbackExpanded ? "Collapse feedback" : "Expand feedback"}
           >
-            <div className="flex-shrink-0">
-              <img src={lightbulbIcon} alt="Lightbulb" className="w-14 h-14" />
-            </div>
-            <div className="flex-1 text-left">
-              <h3 className="text-lg text-gray-800 mb-0.5">Help Improve the App?</h3>
-              <p className="text-sm text-gray-600">Tap to share feedback</p>
-            </div>
-            <ChevronRight className="w-6 h-6 text-gray-600 flex-shrink-0" />
-          </button>
-        ) : (
-          <div className="bg-white rounded-2xl shadow-md p-4">
-            {showSuccessMessage ? (
-              <div className="py-8 flex flex-col items-center justify-center">
-                <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
-                <h3 className="text-xl text-gray-800 mb-2">Thank you!</h3>
-                <p className="text-gray-600 text-center">Your feedback has been submitted successfully.</p>
-              </div>
+            {isFeedbackExpanded ? (
+              <ChevronUp className="w-6 h-6" />
             ) : (
-              <>
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl">Feedback</h2>
-                  <button
-                    onClick={() => setIsFeedbackExpanded(false)}
-                    className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
-                  >
-                    ×
-                  </button>
-                </div>
-                <p className="text-gray-600 mb-4">We'd love to hear your thoughts! Share your feedback to help us improve.</p>
-
-                <textarea
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  placeholder="Share your feedback here..."
-                  className="w-full h-32 p-4 rounded-xl bg-[#F5F1E8] border border-gray-200 text-gray-700 placeholder:text-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-[#6B46C1]"
-                />
-
-                <button
-                  onClick={handleSubmitFeedback}
-                  className="w-full mt-4 bg-[#6B46C1] text-white py-3 rounded-full hover:bg-[#5a3ba3] transition-colors flex items-center justify-center gap-2"
-                >
-                  <Send className="w-5 h-5" />
-                  Submit Feedback
-                </button>
-              </>
+              <ChevronDown className="w-6 h-6" />
             )}
+          </button>
+        </div>
+        
+        {isFeedbackExpanded && (
+          <div className="space-y-4">
+          {/* Feedback Card 1 */}
+          <div className="bg-white rounded-2xl shadow-sm p-5 border-l-4 border-[color:var(--theme-primary)] relative">
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-[#F5F1E8] flex items-center justify-center text-[color:var(--theme-primary)] font-bold text-sm">
+                  AF
+                </div>
+                <h3 className="font-semibold text-gray-800 text-sm">Dr. Alistair Finch</h3>
+              </div>
+              <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full border border-gray-100 shadow-sm">Mar 25, 2026</span>
+            </div>
+            <h4 className="font-medium text-gray-800 mb-2">Weekly Assessment Review</h4>
+            <p className="text-gray-600 text-sm leading-relaxed mb-4">
+              Your sleep patterns have shown great improvement this week. I recommend continuing the mindfulness meditation before bed. We can discuss your symptom tracking in our next session.
+            </p>
+            <div className="flex gap-2">
+               <button className="bg-[#F5F1E8] text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-[#e2ddd3] transition-colors">
+                 Acknowledge
+               </button>
+               <button className="text-[color:var(--theme-primary)] bg-[color:var(--theme-primary)]/10 px-4 py-2 rounded-full text-sm font-medium hover:bg-[color:var(--theme-primary)]/20 transition-colors">
+                 Reply
+               </button>
+            </div>
           </div>
+
+          {/* Feedback Card 2 */}
+          <div className="bg-white rounded-2xl shadow-sm p-5 border-l-4 border-gray-300 opacity-80 hover:opacity-100 transition-opacity">
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm">
+                  SC
+                </div>
+                <h3 className="font-semibold text-gray-600 text-sm">Sarah Chen</h3>
+              </div>
+              <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full border border-gray-100">Mar 20, 2026</span>
+            </div>
+            <h4 className="font-medium text-gray-700 mb-2">Physical Therapy Notes</h4>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Please remember to keep your posture straight during the desk exercises we practiced. Don't push past the point of pain.
+            </p>
+          </div>
+        </div>
         )}
       </main>
 
@@ -209,7 +205,7 @@ export default function ConnectionsPage({ onNavigateToHome, onNavigateToActiviti
             <Home className="w-6 h-6" />
             <span className="text-xs">Home</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-[#6B46C1]">
+          <button className="flex flex-col items-center gap-1 text-[color:var(--theme-primary)]">
             <Users className="w-6 h-6" />
             <span className="text-xs">Connections</span>
           </button>
@@ -234,7 +230,10 @@ export default function ConnectionsPage({ onNavigateToHome, onNavigateToActiviti
             <BarChart3 className="w-6 h-6" />
             <span className="text-xs">Data</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-gray-400">
+          <button
+            onClick={onNavigateToSettings}
+            className="flex flex-col items-center gap-1 text-gray-400 transition-colors hover:text-gray-600"
+          >
             <Settings className="w-6 h-6" />
             <span className="text-xs">Settings</span>
           </button>

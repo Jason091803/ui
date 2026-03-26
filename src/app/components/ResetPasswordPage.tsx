@@ -18,7 +18,7 @@ export default function ResetPasswordPage({ onNavigateToLogin, onNavigateToVerif
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
       {/* Header */}
-      <header className="bg-[#6B46C1] text-white py-6 px-4 flex items-center justify-center">
+      <header className="bg-[color:var(--theme-primary)] text-white py-6 px-4 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-xl">Reset Password</h1>
           <div className="w-12 h-0.5 bg-white mx-auto mt-1"></div>
@@ -52,7 +52,7 @@ export default function ResetPasswordPage({ onNavigateToLogin, onNavigateToVerif
           {/* Send Verification Code Button */}
           <button
             type="submit"
-            className="w-full bg-[#6B46C1] text-white py-4 rounded-lg hover:bg-[#5a3ba3] transition-colors"
+            className="w-full bg-[color:var(--theme-primary)] text-white py-4 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors"
           >
             Send Verification Code
           </button>
@@ -61,7 +61,7 @@ export default function ResetPasswordPage({ onNavigateToLogin, onNavigateToVerif
           <button
             type="button"
             onClick={onNavigateToLogin}
-            className="w-full bg-white text-[#6B46C1] py-4 rounded-lg border-2 border-[#6B46C1] hover:bg-gray-50 transition-colors"
+            className="w-full bg-white text-[color:var(--theme-primary)] py-4 rounded-lg border-2 border-[color:var(--theme-primary)] hover:bg-gray-50 transition-colors"
           >
             Back to Login
           </button>
@@ -73,7 +73,7 @@ export default function ResetPasswordPage({ onNavigateToLogin, onNavigateToVerif
             Remember your password?{' '}
             <button
               onClick={onNavigateToLogin}
-              className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+              className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
             >
               Log in
             </button>

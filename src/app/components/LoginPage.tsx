@@ -23,7 +23,7 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
       {/* Header */}
-      <header className="bg-[#6B46C1] text-white py-6 px-4 flex items-center justify-center">
+      <header className="bg-[color:var(--theme-primary)] text-white py-6 px-4 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-xl">Login</h1>
           <div className="w-12 h-0.5 bg-white mx-auto mt-1"></div>
@@ -33,7 +33,7 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
       {/* Main Content */}
       <main className="flex-1 px-6 pt-12 pb-8 max-w-md mx-auto w-full">
         {/* Logo/Title */}
-        <h2 className="text-[#6B46C1] text-3xl text-center mb-12">Braver Ventures</h2>
+        <h2 className="text-[color:var(--theme-primary)] text-3xl text-center mb-12">Braver Ventures</h2>
 
         {/* Login Form */}
         <div className="space-y-6">
@@ -45,14 +45,14 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
               <button 
                 type="button"
                 onClick={() => setUserType('patient')}
-                className={`flex-1 py-3 rounded-full text-sm font-medium transition-colors ${userType === 'patient' ? 'bg-[#6B46C1] text-white' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 py-3 rounded-full text-sm font-medium transition-colors ${userType === 'patient' ? 'bg-[color:var(--theme-primary)] text-white' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Patient
               </button>
               <button 
                 type="button"
                 onClick={() => setUserType('doctor')}
-                className={`flex-1 py-3 rounded-full text-sm font-medium transition-colors ${userType === 'doctor' ? 'bg-[#6B46C1] text-white' : 'text-gray-500 hover:text-gray-700'}`}
+                className={`flex-1 py-3 rounded-full text-sm font-medium transition-colors ${userType === 'doctor' ? 'bg-[color:var(--theme-primary)] text-white' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 Doctor
               </button>
@@ -81,7 +81,7 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
             {/* Login Button */}
             <button
               type="submit"
-              className="w-full bg-[#6B46C1] text-white py-4 rounded-lg hover:bg-[#5a3ba3] transition-colors"
+              className="w-full bg-[color:var(--theme-primary)] text-white py-4 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors"
             >
               Login
             </button>
@@ -93,7 +93,7 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
               Don't have an account?{' '}
               <button
                 onClick={onNavigateToSignup}
-                className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+                className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
               >
                 Create one
               </button>
@@ -102,7 +102,7 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
               Forgot your password?{' '}
               <button
                 onClick={onNavigateToReset}
-                className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+                className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
               >
                 Reset
               </button>
@@ -117,14 +117,14 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
           By clicking login, you agree to our{' '}
           <button
             onClick={onNavigateToTerms}
-            className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+            className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
           >
             Terms of Service
           </button>{' '}
           and{' '}
           <button
             onClick={onNavigateToPrivacy}
-            className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+            className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
           >
             Privacy Policy
           </button>

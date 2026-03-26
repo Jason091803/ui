@@ -8,7 +8,7 @@ export default function TermsOfServicePage({ onNavigateBack }: TermsOfServicePag
       <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl text-[#6B46C1] mb-2">Terms of Service</h1>
+          <h1 className="text-2xl text-[color:var(--theme-primary)] mb-2">Terms of Service</h1>
           <p className="text-sm text-gray-600">Effective Date: Oct 21, 2025</p>
         </div>
 
@@ -59,7 +59,7 @@ export default function TermsOfServicePage({ onNavigateBack }: TermsOfServicePag
         <div className="mt-8">
           <button
             onClick={onNavigateBack}
-            className="bg-[#6B46C1] text-white px-8 py-3 rounded-lg hover:bg-[#5a3ba3] transition-colors"
+            className="bg-[color:var(--theme-primary)] text-white px-8 py-3 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors"
           >
             Back
           </button>

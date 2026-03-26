@@ -21,7 +21,7 @@ export default function SignupPage({ onNavigateToLogin, onNavigateToCreateAccoun
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
       {/* Header */}
-      <header className="bg-[#6B46C1] text-white py-6 px-4 flex items-center justify-center">
+      <header className="bg-[color:var(--theme-primary)] text-white py-6 px-4 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-xl">Sign Up</h1>
           <div className="w-12 h-0.5 bg-white mx-auto mt-1"></div>
@@ -31,7 +31,7 @@ export default function SignupPage({ onNavigateToLogin, onNavigateToCreateAccoun
       {/* Main Content */}
       <main className="flex-1 px-6 pt-12 pb-8 max-w-md mx-auto w-full">
         {/* Logo/Title */}
-        <h2 className="text-[#6B46C1] text-3xl text-center mb-12">Braver Ventures</h2>
+        <h2 className="text-[color:var(--theme-primary)] text-3xl text-center mb-12">Braver Ventures</h2>
 
         {/* Signup Form */}
         <div className="space-y-6">
@@ -78,7 +78,7 @@ export default function SignupPage({ onNavigateToLogin, onNavigateToCreateAccoun
             {/* Continue Button */}
             <button
               type="submit"
-              className="w-full bg-[#6B46C1] text-white py-4 rounded-lg hover:bg-[#5a3ba3] transition-colors"
+              className="w-full bg-[color:var(--theme-primary)] text-white py-4 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors"
             >
               Continue
             </button>
@@ -90,7 +90,7 @@ export default function SignupPage({ onNavigateToLogin, onNavigateToCreateAccoun
               Already have an account?{' '}
               <button
                 onClick={onNavigateToLogin}
-                className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+                className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
               >
                 Log in
               </button>
@@ -105,14 +105,14 @@ export default function SignupPage({ onNavigateToLogin, onNavigateToCreateAccoun
           By clicking continue, you agree to our{' '}
           <button
             onClick={onNavigateToTerms}
-            className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+            className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
           >
             Terms of Service
           </button>{' '}
           and{' '}
           <button
             onClick={onNavigateToPrivacy}
-            className="text-[#6B46C1] underline hover:text-[#5a3ba3]"
+            className="text-[color:var(--theme-primary)] underline hover:text-[color:var(--theme-secondary)]"
           >
             Privacy Policy
           </button>

@@ -16,9 +16,10 @@ interface HomePageProps {
   onNavigateToActivities: () => void;
   onNavigateToCalendar: () => void;
   onNavigateToData: () => void;
+  onNavigateToSettings?: () => void;
 }
 
-export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, onNavigateToConnections, onNavigateToActivities, onNavigateToCalendar, onNavigateToData }: HomePageProps) {
+export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, onNavigateToConnections, onNavigateToActivities, onNavigateToCalendar, onNavigateToData , onNavigateToSettings }: HomePageProps) {
   const [medications, setMedications] = useState([
     { id: 1, name: 'Aspirin - 81mg', instruction: 'Take 1 pill after breakfast', taken: true },
     { id: 2, name: 'Vitamin D3 - 1000 IU', instruction: 'Take 1 capsule at noon', taken: false },
@@ -112,7 +113,7 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
 
           <button
             onClick={onNavigateToSymptomList}
-            className="text-[#6B46C1] text-sm mt-2 underline hover:text-[#5a3ba3]"
+            className="text-[color:var(--theme-primary)] text-sm mt-2 underline hover:text-[color:var(--theme-secondary)]"
           >
             View Full Symptom List
           </button>
@@ -148,7 +149,7 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
         <div className="bg-white rounded-2xl shadow-md p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg">Upcoming Activities</h2>
-            <button className="text-[#6B46C1] text-sm hover:text-[#5a3ba3]">See All</button>
+            <button className="text-[color:var(--theme-primary)] text-sm hover:text-[color:var(--theme-secondary)]">See All</button>
           </div>
           <div className="flex flex-col items-center justify-center py-8 text-gray-400">
             <Calendar className="w-16 h-16 mb-2 opacity-30" />
@@ -160,7 +161,7 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3">
         <div className="flex justify-around items-center max-w-md mx-auto">
-          <button className="flex flex-col items-center gap-1 text-[#6B46C1]">
+          <button className="flex flex-col items-center gap-1 text-[color:var(--theme-primary)]">
             <Home className="w-6 h-6" />
             <span className="text-xs">Home</span>
           </button>
@@ -192,7 +193,10 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
             <BarChart3 className="w-6 h-6" />
             <span className="text-xs">Data</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-gray-400">
+          <button
+            onClick={onNavigateToSettings}
+            className="flex flex-col items-center gap-1 text-gray-400 transition-colors hover:text-gray-600"
+          >
             <Settings className="w-6 h-6" />
             <span className="text-xs">Settings</span>
           </button>

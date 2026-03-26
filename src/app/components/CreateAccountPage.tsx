@@ -30,7 +30,7 @@ export default function CreateAccountPage({ email, onNavigateToSignup, onNavigat
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto relative">
       {/* Header */}
-      <header className="bg-[#6B46C1] text-white py-6 px-4 flex items-center justify-center">
+      <header className="bg-[color:var(--theme-primary)] text-white py-6 px-4 flex items-center justify-center">
         <h1 className="text-xl">Create Account</h1>
       </header>
 
@@ -97,7 +97,7 @@ export default function CreateAccountPage({ email, onNavigateToSignup, onNavigat
           {/* Create Account Button */}
           <button
             type="submit"
-            className="w-full bg-[#6B46C1] text-white py-4 rounded-lg hover:bg-[#5a3ba3] transition-colors mt-6"
+            className="w-full bg-[color:var(--theme-primary)] text-white py-4 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors mt-6"
           >
             Create Account
           </button>
@@ -106,7 +106,7 @@ export default function CreateAccountPage({ email, onNavigateToSignup, onNavigat
           <button
             type="button"
             onClick={onNavigateToSignup}
-            className="w-full bg-white text-[#6B46C1] py-4 rounded-lg border-2 border-[#6B46C1] hover:bg-gray-50 transition-colors"
+            className="w-full bg-white text-[color:var(--theme-primary)] py-4 rounded-lg border-2 border-[color:var(--theme-primary)] hover:bg-gray-50 transition-colors"
           >
             Back to Sign Up
           </button>
@@ -145,7 +145,7 @@ export default function CreateAccountPage({ email, onNavigateToSignup, onNavigat
             {/* Go to Login Button */}
             <button
               onClick={onNavigateToLogin}
-              className="w-full bg-[#6B46C1] text-white py-4 rounded-lg hover:bg-[#5a3ba3] transition-colors"
+              className="w-full bg-[color:var(--theme-primary)] text-white py-4 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors"
             >
               Go to Login
             </button>

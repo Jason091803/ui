@@ -7,9 +7,10 @@ interface DataPageProps {
   onNavigateToConnections?: () => void;
   onNavigateToActivities?: () => void;
   onNavigateToCalendar?: () => void;
+  onNavigateToSettings?: () => void;
 }
 
-export default function DataPage({ onNavigateToHome, onNavigateToConnections, onNavigateToActivities, onNavigateToCalendar }: DataPageProps) {
+export default function DataPage({ onNavigateToHome, onNavigateToConnections, onNavigateToActivities, onNavigateToCalendar , onNavigateToSettings }: DataPageProps) {
   const [currentWeek, setCurrentWeek] = useState(0);
   const [currentMonth, setCurrentMonth] = useState(0);
   const [currentYear, setCurrentYear] = useState(0);
@@ -211,19 +212,19 @@ export default function DataPage({ onNavigateToHome, onNavigateToConnections, on
           <div className="bg-white rounded-full p-1 flex shadow-sm border border-gray-100">
             <button 
               onClick={() => setTimeRange('weekly')}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${timeRange === 'weekly' ? 'bg-[#E1BEE7] text-[#6B46C1]' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${timeRange === 'weekly' ? 'bg-[#E1BEE7] text-[color:var(--theme-primary)]' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Weekly
             </button>
             <button 
               onClick={() => setTimeRange('monthly')}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${timeRange === 'monthly' ? 'bg-[#E1BEE7] text-[#6B46C1]' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${timeRange === 'monthly' ? 'bg-[#E1BEE7] text-[color:var(--theme-primary)]' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Monthly
             </button>
             <button 
               onClick={() => setTimeRange('yearly')}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${timeRange === 'yearly' ? 'bg-[#E1BEE7] text-[#6B46C1]' : 'text-gray-500 hover:text-gray-700'}`}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${timeRange === 'yearly' ? 'bg-[#E1BEE7] text-[color:var(--theme-primary)]' : 'text-gray-500 hover:text-gray-700'}`}
             >
               Yearly
             </button>
@@ -237,7 +238,7 @@ export default function DataPage({ onNavigateToHome, onNavigateToConnections, on
               onClick={() => navigateTime('prev')}
               className="w-10 h-10 rounded-full bg-[#E1BEE7] flex items-center justify-center hover:bg-[#CE93D8] transition-colors"
             >
-              <ChevronLeft className="w-5 h-5 text-[#6B46C1]" />
+              <ChevronLeft className="w-5 h-5 text-[color:var(--theme-primary)]" />
             </button>
 
             <div className="text-center">
@@ -249,7 +250,7 @@ export default function DataPage({ onNavigateToHome, onNavigateToConnections, on
               onClick={() => navigateTime('next')}
               className="w-10 h-10 rounded-full bg-[#E1BEE7] flex items-center justify-center hover:bg-[#CE93D8] transition-colors"
             >
-              <ChevronRight className="w-5 h-5 text-[#6B46C1]" />
+              <ChevronRight className="w-5 h-5 text-[color:var(--theme-primary)]" />
             </button>
           </div>
 
@@ -463,11 +464,14 @@ export default function DataPage({ onNavigateToHome, onNavigateToConnections, on
             <CalendarIcon className="w-6 h-6" />
             <span className="text-xs">Calendar</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-[#6B46C1]">
+          <button className="flex flex-col items-center gap-1 text-[color:var(--theme-primary)]">
             <BarChart3 className="w-6 h-6" />
             <span className="text-xs">Data</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-gray-400">
+          <button
+            onClick={onNavigateToSettings}
+            className="flex flex-col items-center gap-1 text-gray-400 transition-colors hover:text-gray-600"
+          >
             <Settings className="w-6 h-6" />
             <span className="text-xs">Settings</span>
           </button>

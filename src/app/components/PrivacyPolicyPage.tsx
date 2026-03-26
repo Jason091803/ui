@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage({ onNavigateBack }: PrivacyPolicyPageP
       <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl w-full my-6">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl text-[#6B46C1] mb-2">Privacy Policy</h1>
+          <h1 className="text-2xl text-[color:var(--theme-primary)] mb-2">Privacy Policy</h1>
           <p className="text-sm text-gray-600">Effective Date: Oct 21, 2025</p>
         </div>
 
@@ -138,7 +138,7 @@ export default function PrivacyPolicyPage({ onNavigateBack }: PrivacyPolicyPageP
         <div className="mt-8">
           <button
             onClick={onNavigateBack}
-            className="bg-[#6B46C1] text-white px-8 py-3 rounded-lg hover:bg-[#5a3ba3] transition-colors"
+            className="bg-[color:var(--theme-primary)] text-white px-8 py-3 rounded-lg hover:bg-[color:var(--theme-secondary)] transition-colors"
           >
             Back
           </button>

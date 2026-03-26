@@ -6,6 +6,7 @@ interface CalendarPageProps {
   onNavigateToConnections?: () => void;
   onNavigateToActivities?: () => void;
   onNavigateToData?: () => void;
+  onNavigateToSettings?: () => void;
 }
 
 interface DayData {
@@ -27,7 +28,7 @@ interface DayData {
   };
 }
 
-export default function CalendarPage({ onNavigateToHome, onNavigateToConnections, onNavigateToActivities, onNavigateToData }: CalendarPageProps) {
+export default function CalendarPage({ onNavigateToHome, onNavigateToConnections, onNavigateToActivities, onNavigateToData , onNavigateToSettings }: CalendarPageProps) {
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'month' | 'week'>('month');
@@ -320,14 +321,14 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
         <div className="flex items-center justify-between mb-4 relative min-h-[40px]">
           <div className="flex items-center gap-3 relative z-10">
             <button 
-              className="w-10 h-10 border-2 border-[#1E88E5] rounded-full flex items-center justify-center text-[#4A148C] hover:bg-blue-50 transition-colors"
+              className="w-10 h-10 border-2 border-[#1E88E5] rounded-full flex items-center justify-center text-[color:var(--theme-extra-dark)] hover:bg-blue-50 transition-colors"
               onClick={() => viewMode === 'month' ? navigateMonth('prev') : navigateWeek('prev')}
             >
               <ChevronLeft className="w-6 h-6 -ml-0.5" />
             </button>
             <button
               onClick={goToToday}
-              className="bg-[#4A148C] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#380e6b] transition-colors shadow-sm"
+              className="bg-[color:var(--theme-extra-dark)] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#380e6b] transition-colors shadow-sm"
             >
               Today
             </button>
@@ -338,7 +339,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
           </h2>
 
           <button 
-            className="w-10 h-10 text-[#4A148C] hover:bg-purple-50 rounded-full flex items-center justify-center transition-colors relative z-10"
+            className="w-10 h-10 text-[color:var(--theme-extra-dark)] hover:bg-purple-50 rounded-full flex items-center justify-center transition-colors relative z-10"
             onClick={() => viewMode === 'month' ? navigateMonth('next') : navigateWeek('next')}
           >
             <ChevronRight className="w-6 h-6" />
@@ -351,7 +352,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
             onClick={() => setViewMode('month')}
             className={`flex-1 py-3 rounded-full flex items-center justify-center gap-2 transition-colors ${
               viewMode === 'month'
-                ? 'bg-[#6B46C1] text-white hover:bg-[#5a3ba3]'
+                ? 'bg-[color:var(--theme-primary)] text-white hover:bg-[color:var(--theme-secondary)]'
                 : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
             }`}
           >
@@ -362,7 +363,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
             onClick={() => setViewMode('week')}
             className={`flex-1 py-3 rounded-full flex items-center justify-center gap-2 transition-colors ${
               viewMode === 'week'
-                ? 'bg-[#6B46C1] text-white hover:bg-[#5a3ba3]'
+                ? 'bg-[color:var(--theme-primary)] text-white hover:bg-[color:var(--theme-secondary)]'
                 : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
             }`}
           >
@@ -375,7 +376,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
         <div className="border-t border-b border-gray-300 py-3 mb-4">
           <div className="flex items-center justify-center gap-6 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[#6B46C1]"></div>
+              <div className="w-3 h-3 rounded-full bg-[color:var(--theme-primary)]"></div>
               <span className="text-gray-700">Available</span>
             </div>
             <div className="flex items-center gap-2">
@@ -391,7 +392,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
 
         {/* Sync Button */}
         <div className="flex justify-end mb-4">
-          <button className="bg-[#6B46C1] text-white px-6 py-2 rounded-full text-sm hover:bg-[#5a3ba3] transition-colors">
+          <button className="bg-[color:var(--theme-primary)] text-white px-6 py-2 rounded-full text-sm hover:bg-[color:var(--theme-secondary)] transition-colors">
             sync to external calendar
           </button>
         </div>
@@ -429,7 +430,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                         <div
                           key={idx}
                           className={`w-1.5 h-1.5 rounded-full ${
-                            marker === 'available' ? 'bg-[#6B46C1]' :
+                            marker === 'available' ? 'bg-[color:var(--theme-primary)]' :
                             marker === 'feedback' ? 'bg-blue-500' :
                             'bg-green-500'
                           }`}
@@ -492,7 +493,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                         <div
                           key={idx}
                           className={`w-2 h-2 rounded-full ${
-                            marker === 'available' ? 'bg-[#6B46C1]' :
+                            marker === 'available' ? 'bg-[color:var(--theme-primary)]' :
                             marker === 'feedback' ? 'bg-blue-500' :
                             'bg-green-500'
                           }`}
@@ -510,7 +511,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
         {viewMode === 'month' && (
           <div className="bg-white rounded-2xl shadow-md p-6">
             <h3 className="text-xl mb-2">
-              <span className="text-[#6B46C1] font-medium">Today</span>
+              <span className="text-[color:var(--theme-primary)] font-medium">Today</span>
               <span className="text-gray-600 ml-2">March 26, 2026</span>
             </h3>
             <p className="text-gray-500 text-center py-8">No Activity Due Today</p>
@@ -542,7 +543,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
             <ListChecks className="w-6 h-6" />
             <span className="text-xs">Activities</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-[#6B46C1]">
+          <button className="flex flex-col items-center gap-1 text-[color:var(--theme-primary)]">
             <CalendarIcon className="w-6 h-6" />
             <span className="text-xs">Calendar</span>
           </button>
@@ -553,7 +554,10 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
             <BarChart3 className="w-6 h-6" />
             <span className="text-xs">Data</span>
           </button>
-          <button className="flex flex-col items-center gap-1 text-gray-400">
+          <button
+            onClick={onNavigateToSettings}
+            className="flex flex-col items-center gap-1 text-gray-400 transition-colors hover:text-gray-600"
+          >
             <Settings className="w-6 h-6" />
             <span className="text-xs">Settings</span>
           </button>
@@ -571,7 +575,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="bg-[#6B46C1] text-white px-6 py-4 flex items-center justify-between flex-shrink-0">
+            <div className="bg-[color:var(--theme-primary)] text-white px-6 py-4 flex items-center justify-between flex-shrink-0">
               <h2 className="text-2xl font-medium">March {selectedDay}, 2026</h2>
               <button
                 onClick={closeModal}
@@ -667,7 +671,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                         <div className="space-y-2">
                           {dayMarkers[selectedDay].includes('available') && (
                             <div className="flex items-center gap-2">
-                              <div className="w-3 h-3 rounded-full bg-[#6B46C1]"></div>
+                              <div className="w-3 h-3 rounded-full bg-[color:var(--theme-primary)]"></div>
                               <span className="text-gray-700">Doctor Available</span>
                             </div>
                           )}

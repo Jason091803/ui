@@ -1,6 +1,10 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --theme-primary: #6B46C1;
+  --theme-secondary: #5a3ba3;
+  --theme-dark: #4c2c8f;
+  --theme-extra-dark: #4A148C;
   --font-size: 16px;
   --background: #ffffff;
   --foreground: oklch(0.145 0 0);
