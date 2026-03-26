@@ -1,0 +1,126 @@
+import { useState } from 'react';
+import LoginPage from './components/LoginPage';
+import SignupPage from './components/SignupPage';
+import CreateAccountPage from './components/CreateAccountPage';
+import ResetPasswordPage from './components/ResetPasswordPage';
+import VerifyResetPage from './components/VerifyResetPage';
+import TermsOfServicePage from './components/TermsOfServicePage';
+import HomePage from './components/HomePage';
+import PrivacyPolicyPage from './components/PrivacyPolicyPage';
+import FullSymptomListPage from './components/FullSymptomListPage';
+import ConnectionsPage from './components/ConnectionsPage';
+import ActivitiesPage from './components/ActivitiesPage';
+import CalendarPage from './components/CalendarPage';
+import DataPage from './components/DataPage';
+
+export default function App() {
+  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset' | 'terms-of-service' | 'privacy-policy' | 'home' | 'full-symptom-list' | 'connections' | 'activities' | 'calendar' | 'data'>('login');
+  const [signupEmail, setSignupEmail] = useState('');
+  const [resetEmail, setResetEmail] = useState('');
+  const [previousPage, setPreviousPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset'>('login');
+
+  return (
+    <>
+      {currentPage === 'login' ? (
+        <LoginPage
+          onNavigateToSignup={() => setCurrentPage('signup')}
+          onNavigateToReset={() => setCurrentPage('reset-password')}
+          onNavigateToTerms={() => {
+            setPreviousPage('login');
+            setCurrentPage('terms-of-service');
+          }}
+          onNavigateToPrivacy={() => {
+            setPreviousPage('login');
+            setCurrentPage('privacy-policy');
+          }}
+          onNavigateToHome={() => setCurrentPage('home')}
+        />
+      ) : currentPage === 'home' ? (
+        <HomePage
+          onNavigateToLogin={() => setCurrentPage('login')}
+          onNavigateToSymptomList={() => setCurrentPage('full-symptom-list')}
+          onNavigateToConnections={() => setCurrentPage('connections')}
+          onNavigateToActivities={() => setCurrentPage('activities')}
+          onNavigateToCalendar={() => setCurrentPage('calendar')}
+          onNavigateToData={() => setCurrentPage('data')}
+        />
+      ) : currentPage === 'data' ? (
+        <DataPage
+          onNavigateToHome={() => setCurrentPage('home')}
+          onNavigateToConnections={() => setCurrentPage('connections')}
+          onNavigateToActivities={() => setCurrentPage('activities')}
+          onNavigateToCalendar={() => setCurrentPage('calendar')}
+        />
+      ) : currentPage === 'calendar' ? (
+        <CalendarPage
+          onNavigateToHome={() => setCurrentPage('home')}
+          onNavigateToConnections={() => setCurrentPage('connections')}
+          onNavigateToActivities={() => setCurrentPage('activities')}
+          onNavigateToData={() => setCurrentPage('data')}
+        />
+      ) : currentPage === 'connections' ? (
+        <ConnectionsPage
+          onNavigateToHome={() => setCurrentPage('home')}
+          onNavigateToActivities={() => setCurrentPage('activities')}
+          onNavigateToCalendar={() => setCurrentPage('calendar')}
+          onNavigateToData={() => setCurrentPage('data')}
+        />
+      ) : currentPage === 'activities' ? (
+        <ActivitiesPage
+          onNavigateToHome={() => setCurrentPage('home')}
+          onNavigateToConnections={() => setCurrentPage('connections')}
+          onNavigateToCalendar={() => setCurrentPage('calendar')}
+          onNavigateToData={() => setCurrentPage('data')}
+        />
+      ) : currentPage === 'full-symptom-list' ? (
+        <FullSymptomListPage
+          onNavigateBack={() => setCurrentPage('home')}
+        />
+      ) : currentPage === 'signup' ? (
+        <SignupPage
+          onNavigateToLogin={() => setCurrentPage('login')}
+          onNavigateToCreateAccount={(email) => {
+            setSignupEmail(email);
+            setCurrentPage('create-account');
+          }}
+          onNavigateToTerms={() => {
+            setPreviousPage('signup');
+            setCurrentPage('terms-of-service');
+          }}
+          onNavigateToPrivacy={() => {
+            setPreviousPage('signup');
+            setCurrentPage('privacy-policy');
+          }}
+        />
+      ) : currentPage === 'reset-password' ? (
+        <ResetPasswordPage
+          onNavigateToLogin={() => setCurrentPage('login')}
+          onNavigateToVerify={(email) => {
+            setResetEmail(email);
+            setCurrentPage('verify-reset');
+          }}
+        />
+      ) : currentPage === 'verify-reset' ? (
+        <VerifyResetPage
+          email={resetEmail}
+          onNavigateToLogin={() => setCurrentPage('login')}
+          onNavigateBackToEmail={() => setCurrentPage('reset-password')}
+        />
+      ) : currentPage === 'terms-of-service' ? (
+        <TermsOfServicePage
+          onNavigateBack={() => setCurrentPage(previousPage)}
+        />
+      ) : currentPage === 'privacy-policy' ? (
+        <PrivacyPolicyPage
+          onNavigateBack={() => setCurrentPage(previousPage)}
+        />
+      ) : (
+        <CreateAccountPage
+          email={signupEmail}
+          onNavigateToSignup={() => setCurrentPage('signup')}
+          onNavigateToLogin={() => setCurrentPage('login')}
+        />
+      )}
+    </>
+  );
+}
