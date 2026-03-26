@@ -2,24 +2,31 @@ import { useState } from 'react';
 import { ArrowLeft, Bell, Home, Users, ListChecks, Calendar, Settings as SettingsIcon, BarChart3, ChevronRight, User, Lock, Shield, MessageSquare, LogOut, X, CheckCircle, Send, Palette } from 'lucide-react';
 
 interface SettingsPageProps {
+  variant?: 'patient' | 'doctor';
+  userName: string;
+  onUpdateUserName?: (name: string) => void;
   onNavigateToHome: () => void;
   onNavigateToConnections?: () => void;
   onNavigateToActivities?: () => void;
+  onNavigateToFeedback?: () => void;
   onNavigateToCalendar?: () => void;
   onNavigateToData?: () => void;
   onNavigateToLogin?: () => void;
 }
 
 export default function SettingsPage({ 
+  variant = 'patient',
+  userName,
+  onUpdateUserName,
   onNavigateToHome, 
   onNavigateToConnections, 
   onNavigateToActivities, 
+  onNavigateToFeedback,
   onNavigateToCalendar, 
   onNavigateToData,
   onNavigateToLogin
 }: SettingsPageProps) {
   const [pushEnabled, setPushEnabled] = useState(true);
-  const [userName, setUserName] = useState('Jason');
   const [activeModal, setActiveModal] = useState<'none' | 'name' | 'password' | 'terms' | 'feedback' | 'theme'>('none');
   
   // Theme Color State
@@ -33,6 +40,7 @@ export default function SettingsPage({
   const [tempName, setTempName] = useState(userName);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const isDoctor = variant === 'doctor';
 
   const openModal = (modalName: 'none' | 'name' | 'password' | 'terms' | 'feedback' | 'theme') => {
     setActiveModal(modalName);
@@ -44,7 +52,7 @@ export default function SettingsPage({
   };
 
   const handleSaveName = () => {
-    if (tempName.trim()) setUserName(tempName);
+    if (tempName.trim()) onUpdateUserName?.(tempName.trim());
     closeModal();
   };
 
@@ -113,7 +121,7 @@ export default function SettingsPage({
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-800">{userName}</h2>
-              <p className="text-gray-500 text-sm">Patient Account</p>
+              <p className="text-gray-500 text-sm">{isDoctor ? 'Doctor Account' : 'Patient Account'}</p>
             </div>
           </div>
         </div>
@@ -460,7 +468,7 @@ export default function SettingsPage({
             className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"
           >
             <Users className="w-6 h-6" />
-            <span className="text-xs">Connections</span>
+            <span className="text-xs">{isDoctor ? 'Clients' : 'Connections'}</span>
           </button>
           <button
             onClick={onNavigateToActivities}
@@ -469,13 +477,24 @@ export default function SettingsPage({
             <ListChecks className="w-6 h-6" />
             <span className="text-xs">Activities</span>
           </button>
-          <button
-            onClick={onNavigateToCalendar}
-            className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"
-          >
-            <Calendar className="w-6 h-6" />
-            <span className="text-xs">Calendar</span>
-          </button>
+          {isDoctor ? (
+            <button
+              onClick={onNavigateToFeedback}
+              className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"
+            >
+              <CheckSquare className="w-6 h-6" />
+              <span className="text-xs">Feedback</span>
+            </button>
+          ) : null}
+          {!isDoctor ? (
+            <button
+              onClick={onNavigateToCalendar}
+              className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"
+            >
+              <Calendar className="w-6 h-6" />
+              <span className="text-xs">Calendar</span>
+            </button>
+          ) : null}
           <button
             onClick={onNavigateToData}
             className="flex flex-col items-center gap-1 transition-colors hover:text-gray-600"

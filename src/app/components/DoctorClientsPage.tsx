@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Clock } from 'lucide-react';
+import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Clock, BarChart3 } from 'lucide-react';
 
 import femaleIcon1 from '../../assets/d2b0f8035a26d66fec4fcf46ab741ed497858fb8.png'; 
 import maleIcon1 from '../../assets/b2c1ba502535293778a6e73cdc21c311f5e2c010.png';
@@ -8,10 +8,12 @@ import femaleIcon2 from '../../assets/5bff0feb4470c57adb5c5b527493a9f313a06bf4.p
 interface DoctorClientsPageProps {
   onNavigateToHome: () => void;
   onNavigateToActivities?: () => void;
+  onNavigateToFeedback?: () => void;
+  onNavigateToData?: () => void;
   onNavigateToSettings?: () => void;
 }
 
-export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivities, onNavigateToSettings }: DoctorClientsPageProps) {
+export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivities, onNavigateToFeedback, onNavigateToData, onNavigateToSettings }: DoctorClientsPageProps) {
   const [filter, setFilter] = useState<'attention' | 'track' | 'completed' | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedClient, setSelectedClient] = useState<any | null>(null);
@@ -19,6 +21,13 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
   const [addClientSearch, setAddClientSearch] = useState('');
   const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [assignActivityToClient, setAssignActivityToClient] = useState<any | null>(null);
+
+  const mockActivities = [
+    { id: 'a1', title: 'Daily Mood Journal', category: 'Journaling', duration: '10 min', icon: '📝', bg: 'bg-purple-100', text: 'text-purple-700' },
+    { id: 'a2', title: '5-Min Breathing', category: 'Mindfulness', duration: '5 min', icon: '🧘', bg: 'bg-emerald-100', text: 'text-emerald-700' },
+    { id: 'a3', title: 'Gratitude Reflection', category: 'Coping Skills', duration: '10 min', icon: '🌻', bg: 'bg-orange-100', text: 'text-orange-700' }
+  ];
 
   const [clients, setClients] = useState([
     {
@@ -194,7 +203,7 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
 
                {/* Absolute Assign Button at bottom right */}
                <button 
-                 onClick={(e) => { e.stopPropagation(); console.log('Assigning task to', client.name); }} 
+                 onClick={(e) => { e.stopPropagation(); setAssignActivityToClient(client); }} 
                  className="absolute bottom-5 right-5 bg-purple-50 text-[color:var(--theme-dark)] px-4 py-1.5 rounded-[10px] text-[13px] font-semibold border-2 border-white shadow-[0_2px_8px_-2px_var(--theme-primary)] hover:bg-purple-100 transition-colors z-20"
                >
                  Assign
@@ -205,6 +214,50 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
         </div>
 
       </main>
+
+      {/* Assign Activity Modal */}
+      {assignActivityToClient && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-[#2B1B54]/40 backdrop-blur-sm sm:items-center p-0 transition-opacity animate-in fade-in duration-200" onClick={() => setAssignActivityToClient(null)}>
+          <div className="bg-white rounded-t-[32px] sm:rounded-3xl w-full max-w-md shadow-2xl relative flex flex-col max-h-[85vh] animate-in slide-in-from-bottom-8 duration-300 overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="px-6 pt-6 pb-4 border-b border-gray-50 flex justify-between items-center bg-white sticky top-0 z-10 shrink-0">
+              <div>
+                 <h2 className="text-[19px] font-extrabold text-gray-900 tracking-tight leading-none mb-1">Assign Activity</h2>
+                 <p className="text-[13px] text-gray-500 font-medium leading-none mt-1.5">Select a task for <b>{assignActivityToClient.name}</b></p>
+              </div>
+              <button onClick={() => setAssignActivityToClient(null)} className="text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+            
+            <div className="p-4 overflow-y-auto space-y-3 w-full flex-1">
+               {mockActivities.map(activity => (
+                 <div key={activity.id} className="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 hover:bg-gray-50 hover:border-purple-200 transition-all cursor-pointer group shadow-sm hover:shadow-md" onClick={() => { setAssignActivityToClient(null); }}>
+                   <div className="flex items-center gap-3.5 flex-1 pr-3">
+                     <div className={`w-[46px] h-[46px] rounded-full flex shrink-0 items-center justify-center font-bold text-2xl ${activity.bg} ${activity.text}`}>
+                       {activity.icon}
+                     </div>
+                     <div className="min-w-0">
+                       <h4 className="text-[15px] font-bold text-gray-900 leading-tight truncate">{activity.title}</h4>
+                       <div className="flex items-center gap-2 mt-1 truncate">
+                         <span className="text-[11.5px] font-bold text-gray-500 uppercase tracking-wide shrink-0">{activity.category}</span>
+                         <span className="w-1 h-1 rounded-full bg-gray-300 shrink-0"></span>
+                         <span className="text-[11.5px] font-medium text-gray-500 shrink-0">{activity.duration}</span>
+                       </div>
+                     </div>
+                   </div>
+                   <button className="bg-white border shrink-0 text-[13px] font-extrabold border-gray-200 text-gray-700 px-4 py-1.5 rounded-[12px] shadow-sm group-hover:bg-[color:var(--theme-primary)] group-hover:text-white group-hover:border-transparent transition-all pointer-events-none">
+                     Assign
+                   </button>
+                 </div>
+               ))}
+               
+               <button onClick={() => setAssignActivityToClient(null)} className="w-full mt-2 bg-gray-50 text-gray-500 border-2 border-dashed border-gray-200 font-bold text-[14px] py-4 rounded-[16px] hover:bg-gray-100 hover:text-gray-700 transition-all flex items-center justify-center gap-2">
+                 + Create New Activity
+               </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add Client Modal */}
       {showAddClientModal && (
@@ -393,9 +446,14 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
             <span className="text-[11px] font-semibold">Activities</span>
           </button>
 
-          <button className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
+          <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
             <CheckSquare className="w-[22px] h-[22px]" />
             <span className="text-[11px] font-semibold">Feedback</span>
+          </button>
+
+          <button onClick={onNavigateToData} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
+            <BarChart3 className="w-[22px] h-[22px]" />
+            <span className="text-[11px] font-semibold">Data</span>
           </button>
           
           <button onClick={onNavigateToSettings} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">

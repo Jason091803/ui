@@ -1,13 +1,16 @@
-import { useState } from 'react';
-import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Bell, Clock, Calendar as CalendarIcon, MoreHorizontal, Sparkles } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Bell, Clock, Calendar as CalendarIcon, MoreHorizontal, Sparkles, BarChart3 } from 'lucide-react';
 
 interface DoctorActivitiesPageProps {
+  initialAction?: 'assign' | 'ai-create' | null;
   onNavigateToHome: () => void;
   onNavigateToClients?: () => void;
+  onNavigateToFeedback?: () => void;
+  onNavigateToData?: () => void;
   onNavigateToSettings?: () => void;
 }
 
-export default function DoctorActivitiesPage({ onNavigateToHome, onNavigateToClients, onNavigateToSettings }: DoctorActivitiesPageProps) {
+export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, onNavigateToClients, onNavigateToFeedback, onNavigateToData, onNavigateToSettings }: DoctorActivitiesPageProps) {
   const [filter, setFilter] = useState<'total' | 'assigned' | 'templates'>('assigned');
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -17,6 +20,7 @@ export default function DoctorActivitiesPage({ onNavigateToHome, onNavigateToCli
   const [showAiModal, setShowAiModal] = useState(false);
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [launchActionHandled, setLaunchActionHandled] = useState(false);
 
   const mockClients = [
     { id: 'c1', name: 'Emma L.', plan: 'Anxiety & Stress Management', bg: 'bg-orange-100', text: 'text-orange-700' },
@@ -81,6 +85,27 @@ export default function DoctorActivitiesPage({ onNavigateToHome, onNavigateToCli
     if (searchQuery && !a.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
+
+  useEffect(() => {
+    if (launchActionHandled || !initialAction) {
+      return;
+    }
+
+    if (initialAction === 'ai-create') {
+      setShowAiModal(true);
+      setShowCreateModal(false);
+      setAssignModalActivity(null);
+      setLaunchActionHandled(true);
+      return;
+    }
+
+    if (initialAction === 'assign' && activities.length > 0) {
+      setAssignModalActivity(activities[0]);
+      setShowAiModal(false);
+      setShowCreateModal(false);
+      setLaunchActionHandled(true);
+    }
+  }, [activities, initialAction, launchActionHandled]);
 
   return (
     <div className="size-full flex flex-col bg-[#FDFBF7] overflow-auto font-sans text-gray-900 pb-[90px] relative">
@@ -269,6 +294,9 @@ export default function DoctorActivitiesPage({ onNavigateToHome, onNavigateToCli
                      setActivities([created, ...activities]);
                      setShowCreateModal(false);
                      setNewActivity({ title: '', category: 'General', description: '', duration: '', frequency: '' });
+                     if (initialAction === 'ai-create') {
+                       onNavigateToHome();
+                     }
                    }
                  }}
                  className="w-full bg-[color:var(--theme-primary)] text-white font-bold text-[15px] py-3.5 rounded-xl shadow-md shadow-purple-900/10 hover:bg-[color:var(--theme-dark)] transition-colors"
@@ -297,7 +325,10 @@ export default function DoctorActivitiesPage({ onNavigateToHome, onNavigateToCli
                <h3 className="text-[12px] font-extrabold text-gray-400 uppercase tracking-wider mb-3 px-2">Select a Client</h3>
                {mockClients.map(client => (
                  <div key={client.id} className="flex items-center justify-between p-3.5 rounded-3xl border border-gray-100 hover:bg-gray-50 hover:border-purple-200 transition-all cursor-pointer group shadow-sm hover:shadow-md" onClick={() => {
-                   setAssignModalActivity(null); 
+                   setAssignModalActivity(null);
+                   if (initialAction === 'assign') {
+                     onNavigateToHome();
+                   }
                  }}>
                    <div className="flex items-center gap-3.5">
                      <div className={`w-[46px] h-[46px] rounded-full flex items-center justify-center font-bold text-lg ${client.bg} ${client.text}`}>
@@ -436,9 +467,14 @@ export default function DoctorActivitiesPage({ onNavigateToHome, onNavigateToCli
             <span className="text-[11px] font-bold">Activities</span>
           </button>
 
-          <button className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
+          <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
             <CheckSquare className="w-[22px] h-[22px]" />
             <span className="text-[11px] font-semibold">Feedback</span>
+          </button>
+
+          <button onClick={onNavigateToData} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">
+            <BarChart3 className="w-[22px] h-[22px]" />
+            <span className="text-[11px] font-semibold">Data</span>
           </button>
           
           <button onClick={onNavigateToSettings} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-16">

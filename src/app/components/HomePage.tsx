@@ -10,6 +10,7 @@ import sneezingIcon from '../../assets/0c700ec4392dac2b2ddc54ed232da9574c13cfe5.
 import lossOfAppetiteIcon from '../../assets/39ecfbd7c4d3584ef9b3d9d86b67480429e1362b.png';
 
 interface HomePageProps {
+  userName: string;
   onNavigateToLogin: () => void;
   onNavigateToSymptomList: () => void;
   onNavigateToConnections: () => void;
@@ -19,7 +20,7 @@ interface HomePageProps {
   onNavigateToSettings?: () => void;
 }
 
-export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, onNavigateToConnections, onNavigateToActivities, onNavigateToCalendar, onNavigateToData , onNavigateToSettings }: HomePageProps) {
+ export default function HomePage({ userName, onNavigateToLogin, onNavigateToSymptomList, onNavigateToConnections, onNavigateToActivities, onNavigateToCalendar, onNavigateToData , onNavigateToSettings }: HomePageProps) {
   const [medications, setMedications] = useState([
     { id: 1, name: 'Aspirin - 81mg', instruction: 'Take 1 pill after breakfast', taken: true },
     { id: 2, name: 'Vitamin D3 - 1000 IU', instruction: 'Take 1 capsule at noon', taken: false },
@@ -49,7 +50,7 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
       {/* Main Content */}
       <main className="flex-1 px-4 pt-6 pb-20 max-w-md mx-auto w-full">
         {/* Greeting */}
-        <h1 className="text-2xl text-center mb-6">Good Day, Jason!</h1>
+        <h1 className="text-2xl text-center mb-6">Good Day, {userName}!</h1>
 
         {/* Daily Journal Card */}
         <div className="bg-white rounded-2xl shadow-md p-6 mb-4">

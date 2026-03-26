@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogOut, Home, Users, ListChecks, CheckSquare, Settings, ChevronRight, AlertTriangle, Circle, Bell } from 'lucide-react';
+import { LogOut, Home, Users, ListChecks, CheckSquare, Settings, ChevronRight, AlertTriangle, Circle, Bell, BarChart3, Sparkles } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 import femaleIcon1 from '../../assets/d2b0f8035a26d66fec4fcf46ab741ed497858fb8.png'; // Sample avatar replacements
@@ -8,16 +8,31 @@ import femaleIcon2 from '../../assets/5bff0feb4470c57adb5c5b527493a9f313a06bf4.p
 
 
 interface DoctorHomePageProps {
+  doctorName: string;
   onNavigateToLogin: () => void;
   onNavigateToConnections?: () => void;
-  onNavigateToActivities?: () => void;
+  onNavigateToActivities?: (action?: 'assign' | 'ai-create') => void;
+  onNavigateToFeedback?: () => void;
+  onNavigateToData?: () => void;
   onNavigateToSettings?: () => void;
 }
 
-export default function DoctorHomePage({ onNavigateToLogin, onNavigateToConnections, onNavigateToActivities, onNavigateToSettings }: DoctorHomePageProps) {
+export default function DoctorHomePage({ doctorName, onNavigateToLogin, onNavigateToConnections, onNavigateToActivities, onNavigateToFeedback, onNavigateToData, onNavigateToSettings }: DoctorHomePageProps) {
   const [activeTab, setActiveTab] = useState<'Mood' | 'Sleep' | 'Activity' | 'Symptoms' | 'Medication'>('Mood');
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const [infoModalClient, setInfoModalClient] = useState<string | null>(null);
+  const [createdActivitiesCount, setCreatedActivitiesCount] = useState(0);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showAiCreateModal, setShowAiCreateModal] = useState(false);
+  const [homeAiPrompt, setHomeAiPrompt] = useState('');
+  const [isHomeAiGenerating, setIsHomeAiGenerating] = useState(false);
+
+  const homeActivities = [
+    { id: '1', title: 'Daily Mood Journal', category: 'Journaling', duration: '10 min', icon: '📝', bg: 'bg-purple-100', text: 'text-purple-700' },
+    { id: '2', title: '5-Minute Breathing Exercise', category: 'Mindfulness', duration: '5 min', icon: '🧘', bg: 'bg-emerald-100', text: 'text-emerald-700' },
+    { id: '3', title: 'Gratitude Reflection', category: 'Coping Skills', duration: '10 min', icon: '🌻', bg: 'bg-orange-100', text: 'text-orange-700' },
+  ];
+  const [selectedAssignActivity, setSelectedAssignActivity] = useState<(typeof homeActivities)[number] | null>(null);
 
   // Hardcoded UI Data Mockup matching screenshots
   const progressData = [
@@ -28,6 +43,12 @@ export default function DoctorHomePage({ onNavigateToLogin, onNavigateToConnecti
     { day: 'Wed', value: 6.8 },
     { day: 'Thu', value: 6.9 },
     { day: 'Fri', value: 6.8 },
+  ];
+
+  const homeClients = [
+    { id: 'c1', name: 'Emma L.', plan: 'Anxiety & Stress Management', avatar: femaleIcon1, bg: 'bg-orange-100' },
+    { id: 'c2', name: 'James T.', plan: 'Mood & Motivation', avatar: maleIcon1, bg: 'bg-blue-50' },
+    { id: 'c3', name: 'Sarah P.', plan: 'Depression & Coping Skills', avatar: femaleIcon2, bg: 'bg-rose-50' },
   ];
 
   return (
@@ -49,23 +70,33 @@ export default function DoctorHomePage({ onNavigateToLogin, onNavigateToConnecti
       <main className="flex-1 px-5 pb-24 max-w-md mx-auto w-full space-y-5">
         
         {/* Greeting */}
-        <h1 className="text-2xl font-bold text-center tracking-tight mb-6">Good Day, Dr. testclinician!</h1>
+        <h1 className="text-2xl font-bold text-center tracking-tight mb-6">Good Day, Dr. {doctorName}!</h1>
 
         {/* Quick Stats Dual Cards */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-5 flex flex-col items-center border border-gray-50/50">
             <h2 className="text-[15px] font-bold text-[color:var(--theme-dark)] mb-4">Created Activities</h2>
-            <div className="text-3xl font-bold text-gray-900 mb-6">0</div>
+            <div className="text-3xl font-bold text-gray-900 mb-6">{createdActivitiesCount}</div>
             <div className="flex gap-2 w-full mt-auto">
-               <button className="flex-1 border border-gray-200 text-gray-700 bg-white rounded-full py-1.5 text-xs font-semibold hover:bg-gray-50 transition-colors shadow-sm">Assign</button>
-               <button className="flex-1 text-[color:var(--theme-dark)] bg-purple-100/80 rounded-full py-1.5 text-xs font-semibold hover:bg-purple-200 transition-colors">AI Create</button>
+               <button
+                 onClick={() => setShowAssignModal(true)}
+                 className="flex-1 border border-gray-200 text-gray-700 bg-white rounded-full py-1.5 text-xs font-semibold hover:bg-gray-50 transition-colors shadow-sm"
+               >
+                 Assign
+               </button>
+               <button
+                 onClick={() => setShowAiCreateModal(true)}
+                 className="flex-1 text-[color:var(--theme-dark)] bg-purple-100/80 rounded-full py-1.5 text-xs font-semibold hover:bg-purple-200 transition-colors"
+               >
+                 AI Create
+               </button>
             </div>
           </div>
 
           <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] p-5 flex flex-col items-center border border-gray-50/50">
             <h2 className="text-[15px] font-bold text-[color:var(--theme-dark)] mb-4 text-center">Feedback to Review</h2>
             <div className="text-3xl font-bold text-gray-900 mb-6">0</div>
-            <button className="w-2/3 mt-auto text-[color:var(--theme-dark)] bg-purple-100/80 rounded-full py-1.5 text-xs font-semibold hover:bg-purple-200 transition-colors">Review</button>
+            <button onClick={onNavigateToFeedback} className="w-2/3 mt-auto text-[color:var(--theme-dark)] bg-purple-100/80 rounded-full py-1.5 text-xs font-semibold hover:bg-purple-200 transition-colors">Review</button>
           </div>
         </div>
 
@@ -275,6 +306,161 @@ export default function DoctorHomePage({ onNavigateToLogin, onNavigateToConnecti
         </div>
       )}
 
+      {showAssignModal && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-[#2B1B54]/40 backdrop-blur-sm sm:items-center p-0 transition-opacity animate-in fade-in duration-200" onClick={() => {
+          setShowAssignModal(false);
+          setSelectedAssignActivity(null);
+        }}>
+          <div className="bg-white rounded-t-[32px] sm:rounded-3xl w-full max-w-md shadow-2xl relative flex flex-col max-h-[85vh] animate-in slide-in-from-bottom-8 duration-300 overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="px-6 pt-6 pb-4 border-b border-gray-50 flex justify-between items-center bg-white sticky top-0 z-10 shrink-0">
+              <div>
+                <h2 className="text-[19px] font-extrabold text-gray-900 tracking-tight leading-none mb-1">Assign Activity</h2>
+                <p className="text-[13px] text-gray-500 font-medium leading-none mt-1.5">
+                  {selectedAssignActivity ? `Choose a patient for ${selectedAssignActivity.title}.` : 'Choose an activity to assign from the home quick action.'}
+                </p>
+              </div>
+              <button onClick={() => {
+                if (selectedAssignActivity) {
+                  setSelectedAssignActivity(null);
+                  return;
+                }
+                setShowAssignModal(false);
+              }} className="text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+
+            <div className="p-4 overflow-y-auto space-y-3 w-full flex-1">
+              {!selectedAssignActivity ? (
+                homeActivities.map(activity => (
+                  <div key={activity.id} className="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 hover:bg-gray-50 hover:border-purple-200 transition-all cursor-pointer group shadow-sm hover:shadow-md" onClick={() => setSelectedAssignActivity(activity)}>
+                    <div className="flex items-center gap-3.5 flex-1 pr-3">
+                      <div className={`w-[46px] h-[46px] rounded-full flex shrink-0 items-center justify-center font-bold text-2xl ${activity.bg} ${activity.text}`}>
+                        {activity.icon}
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-[15px] font-bold text-gray-900 leading-tight truncate">{activity.title}</h4>
+                        <div className="flex items-center gap-2 mt-1 truncate">
+                          <span className="text-[11.5px] font-bold text-gray-500 uppercase tracking-wide shrink-0">{activity.category}</span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300 shrink-0"></span>
+                          <span className="text-[11.5px] font-medium text-gray-500 shrink-0">{activity.duration}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button className="bg-white border shrink-0 text-[13px] font-extrabold border-gray-200 text-gray-700 px-4 py-1.5 rounded-[12px] shadow-sm group-hover:bg-[color:var(--theme-primary)] group-hover:text-white group-hover:border-transparent transition-all pointer-events-none">
+                      Next
+                    </button>
+                  </div>
+                ))
+              ) : (
+                homeClients.map(client => (
+                  <div key={client.id} className="flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 hover:bg-gray-50 hover:border-purple-200 transition-all cursor-pointer group shadow-sm hover:shadow-md" onClick={() => {
+                    setShowAssignModal(false);
+                    setSelectedAssignActivity(null);
+                  }}>
+                    <div className="flex items-center gap-3.5 flex-1 pr-3">
+                      <div className={`w-[46px] h-[46px] rounded-full overflow-hidden border border-gray-100 flex shrink-0 items-center justify-center ${client.bg}`}>
+                        <img src={client.avatar} alt={client.name} className="w-10 h-10 object-contain scale-[1.05]" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-[15px] font-bold text-gray-900 leading-tight truncate">{client.name}</h4>
+                        <p className="text-[12.5px] text-gray-500 font-medium truncate">{client.plan}</p>
+                      </div>
+                    </div>
+                    <button className="bg-white border shrink-0 text-[13px] font-extrabold border-gray-200 text-gray-700 px-4 py-1.5 rounded-[12px] shadow-sm group-hover:bg-[color:var(--theme-primary)] group-hover:text-white group-hover:border-transparent transition-all pointer-events-none">
+                      Assign
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAiCreateModal && (
+        <div className="fixed inset-0 z-[100] flex items-end justify-center bg-[#2B1B54]/40 backdrop-blur-sm sm:items-center p-0 transition-opacity animate-in fade-in duration-200" onClick={() => !isHomeAiGenerating && setShowAiCreateModal(false)}>
+          <div className="bg-white rounded-t-[32px] sm:rounded-3xl w-full max-w-md shadow-2xl relative flex flex-col animate-in slide-in-from-bottom-8 duration-300" onClick={e => e.stopPropagation()}>
+            <div className="px-6 pt-7 pb-4">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-yellow-600 fill-yellow-600" />
+                  </div>
+                  <h2 className="text-[22px] font-extrabold text-gray-900 tracking-tight">AI Co-pilot</h2>
+                </div>
+                <button onClick={() => setShowAiCreateModal(false)} className="text-gray-400 hover:text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-full p-2 transition-colors" disabled={isHomeAiGenerating}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+              </div>
+
+              <p className="text-[14px] text-gray-600 font-medium leading-relaxed mb-5">
+                Generate a new activity directly from the home quick action. Closing or confirming keeps you on the home page.
+              </p>
+
+              <div className="mb-5">
+                <h3 className="text-[12px] font-extrabold text-gray-400 uppercase tracking-wider mb-2.5">Suggested Prompts</h3>
+                <div className="flex flex-wrap gap-2.5">
+                  {[
+                    'Create a calming 5-minute breathing task for anxiety spikes.',
+                    'Design a short journaling task for mood reflection.',
+                    'Make a gentle gratitude practice for evenings.',
+                  ].map(prompt => (
+                    <button
+                      key={prompt}
+                      onClick={() => setHomeAiPrompt(prompt)}
+                      className="bg-purple-50 text-[13px] font-bold text-[color:var(--theme-dark)] px-3.5 py-2 rounded-[12px] border border-purple-100 hover:bg-purple-100 hover:scale-[1.02] transition-all text-left leading-tight shadow-sm"
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mb-4 relative">
+                <textarea
+                  rows={3}
+                  value={homeAiPrompt}
+                  onChange={e => setHomeAiPrompt(e.target.value)}
+                  placeholder="Describe the activity you want AI to create..."
+                  className="w-full px-4 py-3.5 pl-4 pr-12 bg-white border-2 border-gray-100 rounded-[18px] focus:outline-none focus:border-[color:var(--theme-primary)] focus:ring-4 focus:ring-[color:var(--theme-primary)]/10 transition-all font-medium text-[14.5px] text-gray-900 resize-none shadow-sm"
+                ></textarea>
+                <div className="absolute right-3 top-3.5 p-1.5 bg-gray-50 rounded-xl">
+                  <Sparkles className="w-4 h-4 text-gray-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="p-5 border-t border-gray-50 bg-gray-50/50 pb-8 rounded-b-[32px] sm:rounded-b-3xl">
+              <button
+                disabled={!homeAiPrompt.trim() || isHomeAiGenerating}
+                onClick={() => {
+                  setIsHomeAiGenerating(true);
+                  setTimeout(() => {
+                    setCreatedActivitiesCount(count => count + 1);
+                    setIsHomeAiGenerating(false);
+                    setShowAiCreateModal(false);
+                    setHomeAiPrompt('');
+                  }, 1200);
+                }}
+                className="w-full relative bg-[color:var(--theme-dark)] text-white font-bold text-[15px] py-3.5 rounded-[16px] shadow-lg shadow-purple-900/20 hover:opacity-90 disabled:opacity-50 transition-all overflow-hidden flex items-center justify-center gap-2"
+              >
+                {isHomeAiGenerating ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    Confirm AI Create <Sparkles className="w-4 h-4 fill-white" />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Bottom Doctor Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-3 py-3 rounded-t-3xl shadow-[0_-5px_20px_-10px_rgba(0,0,0,0.05)]">
         <div className="flex justify-around items-center max-w-md mx-auto relative px-2">
@@ -294,9 +480,14 @@ export default function DoctorHomePage({ onNavigateToLogin, onNavigateToConnecti
             <span className="text-[11px] font-semibold">Activities</span>
           </button>
 
-          <button className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-16">
+          <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-16">
             <CheckSquare className="w-[22px] h-[22px]" />
             <span className="text-[11px] font-semibold">Feedback</span>
+          </button>
+
+          <button onClick={onNavigateToData} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-16">
+            <BarChart3 className="w-[22px] h-[22px]" />
+            <span className="text-[11px] font-semibold">Data</span>
           </button>
           
           <button onClick={onNavigateToSettings} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-gray-600 transition-colors w-16">

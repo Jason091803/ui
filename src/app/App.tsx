@@ -13,12 +13,18 @@ import ActivitiesPage from './components/ActivitiesPage';
 import CalendarPage from './components/CalendarPage';
 import DataPage from './components/DataPage';
 import SettingsPage from './components/SettingsPage';
+import DoctorSettingsPage from './components/DoctorSettingsPage';
 import DoctorHomePage from './components/DoctorHomePage';
 import DoctorClientsPage from './components/DoctorClientsPage';
 import DoctorActivitiesPage from './components/DoctorActivitiesPage';
+import DoctorDataPage from './components/DoctorDataPage';
+import DoctorFeedbackPage from './components/DoctorFeedbackPage';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset' | 'terms-of-service' | 'privacy-policy' | 'home' | 'doctor-home' | 'doctor-clients' | 'doctor-activities' | 'full-symptom-list' | 'connections' | 'activities' | 'calendar' | 'data' | 'settings'>('login');
+  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset' | 'terms-of-service' | 'privacy-policy' | 'home' | 'doctor-home' | 'doctor-clients' | 'doctor-activities' | 'doctor-feedback' | 'doctor-data' | 'doctor-settings' | 'full-symptom-list' | 'connections' | 'activities' | 'calendar' | 'data' | 'settings'>('login');
+  const [doctorActivitiesLaunchAction, setDoctorActivitiesLaunchAction] = useState<'assign' | 'ai-create' | null>(null);
+  const [patientName, setPatientName] = useState('Jason');
+  const [doctorName, setDoctorName] = useState('testclinician');
   const [signupEmail, setSignupEmail] = useState('');
   const [resetEmail, setResetEmail] = useState('');
   const [previousPage, setPreviousPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset'>('login');
@@ -41,6 +47,7 @@ export default function App() {
         />
       ) : currentPage === 'home' ? (
         <HomePage
+          userName={patientName}
           onNavigateToLogin={() => setCurrentPage('login')}
           onNavigateToSymptomList={() => setCurrentPage('full-symptom-list')}
           onNavigateToConnections={() => setCurrentPage('connections')}
@@ -51,22 +58,72 @@ export default function App() {
         />
       ) : currentPage === 'doctor-home' ? (
         <DoctorHomePage 
+           doctorName={doctorName}
            onNavigateToLogin={() => setCurrentPage('login')}
            onNavigateToConnections={() => setCurrentPage('doctor-clients')}
-           onNavigateToActivities={() => setCurrentPage('doctor-activities')}
-           onNavigateToSettings={() => setCurrentPage('settings')}
+           onNavigateToActivities={(action) => {
+             setDoctorActivitiesLaunchAction(action ?? null);
+             setCurrentPage('doctor-activities');
+           }}
+           onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToData={() => setCurrentPage('doctor-data')}
+           onNavigateToSettings={() => setCurrentPage('doctor-settings')}
         />
       ) : currentPage === 'doctor-clients' ? (
         <DoctorClientsPage 
            onNavigateToHome={() => setCurrentPage('doctor-home')}
-           onNavigateToActivities={() => setCurrentPage('doctor-activities')}
-           onNavigateToSettings={() => setCurrentPage('settings')}
+           onNavigateToActivities={() => {
+             setDoctorActivitiesLaunchAction(null);
+             setCurrentPage('doctor-activities');
+           }}
+           onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToData={() => setCurrentPage('doctor-data')}
+           onNavigateToSettings={() => setCurrentPage('doctor-settings')}
         />
       ) : currentPage === 'doctor-activities' ? (
         <DoctorActivitiesPage 
+           initialAction={doctorActivitiesLaunchAction}
            onNavigateToHome={() => setCurrentPage('doctor-home')}
            onNavigateToClients={() => setCurrentPage('doctor-clients')}
-           onNavigateToSettings={() => setCurrentPage('settings')}
+           onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToData={() => setCurrentPage('doctor-data')}
+           onNavigateToSettings={() => setCurrentPage('doctor-settings')}
+        />
+      ) : currentPage === 'doctor-feedback' ? (
+        <DoctorFeedbackPage
+          onNavigateToHome={() => setCurrentPage('doctor-home')}
+          onNavigateToClients={() => setCurrentPage('doctor-clients')}
+          onNavigateToActivities={() => {
+            setDoctorActivitiesLaunchAction(null);
+            setCurrentPage('doctor-activities');
+          }}
+          onNavigateToData={() => setCurrentPage('doctor-data')}
+          onNavigateToSettings={() => setCurrentPage('doctor-settings')}
+        />
+      ) : currentPage === 'doctor-data' ? (
+        <DoctorDataPage 
+           onNavigateToHome={() => setCurrentPage('doctor-home')}
+           onNavigateToClients={() => setCurrentPage('doctor-clients')}
+           onNavigateToActivities={() => {
+             setDoctorActivitiesLaunchAction(null);
+             setCurrentPage('doctor-activities');
+           }}
+           onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+           onNavigateToSettings={() => setCurrentPage('doctor-settings')}
+        />
+      ) : currentPage === 'doctor-settings' ? (
+        <DoctorSettingsPage
+          userName={doctorName}
+          onUpdateUserName={setDoctorName}
+          onNavigateToHome={() => setCurrentPage('doctor-home')}
+          onNavigateToConnections={() => setCurrentPage('doctor-clients')}
+          onNavigateToActivities={() => {
+            setDoctorActivitiesLaunchAction(null);
+            setCurrentPage('doctor-activities');
+          }}
+          onNavigateToFeedback={() => setCurrentPage('doctor-feedback')}
+          onNavigateToData={() => setCurrentPage('doctor-data')}
+          onNavigateToLogin={() => setCurrentPage('login')}
         />
       ) : currentPage === 'data' ? (
         <DataPage
@@ -102,6 +159,8 @@ export default function App() {
         />
       ) : currentPage === 'settings' ? (
         <SettingsPage
+          userName={patientName}
+          onUpdateUserName={setPatientName}
           onNavigateToHome={() => setCurrentPage('home')}
           onNavigateToConnections={() => setCurrentPage('connections')}
           onNavigateToActivities={() => setCurrentPage('activities')}
