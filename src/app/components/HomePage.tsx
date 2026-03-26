@@ -24,10 +24,9 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
       <header className="bg-white px-4 py-4 flex items-center justify-between shadow-sm">
         <button
           onClick={onNavigateToLogin}
-          className="text-sm text-gray-600 flex items-center gap-1"
+          className="text-sm text-gray-600"
         >
-          <span className="text-lg">📋</span>
-          <span>Log out</span>
+          Log out
         </button>
         <button className="text-gray-700">
           <Bell className="w-6 h-6" />
@@ -105,6 +104,42 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
           >
             View Full Symptom List
           </button>
+        </div>
+
+        {/* Medication Tracking Card */}
+        <div className="bg-white rounded-2xl shadow-md p-6 mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg">Daily Medication</h2>
+            <button className="text-[#6B46C1] text-sm hover:text-[#5a3ba3]">Add/Edit</button>
+          </div>
+          <div className="space-y-3">
+             {/* Medication Item 1 */}
+             <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
+               <div className="flex items-center gap-3">
+                 <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-lg shadow-sm">💊</div>
+                 <div>
+                   <h3 className="text-sm font-medium text-gray-800">Aspirin - 81mg</h3>
+                   <p className="text-xs text-gray-500">Take 1 pill after breakfast</p>
+                 </div>
+               </div>
+               <button className="w-6 h-6 rounded-full border-2 border-green-500 bg-green-500 flex items-center justify-center text-white">
+                 <span className="text-xs">✓</span>
+               </button>
+             </div>
+
+             {/* Medication Item 2 */}
+             <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
+               <div className="flex items-center gap-3">
+                 <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-lg shadow-sm">💊</div>
+                 <div>
+                   <h3 className="text-sm font-medium text-gray-800">Vitamin D3 - 1000 IU</h3>
+                   <p className="text-xs text-gray-500">Take 1 capsule at noon</p>
+                 </div>
+               </div>
+               <button className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors">
+               </button>
+             </div>
+          </div>
         </div>
 
         {/* Upcoming Activities Card */}
