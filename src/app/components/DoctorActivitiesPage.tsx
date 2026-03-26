@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Bell, Clock, Calendar as CalendarIcon, MoreHorizontal, Sparkles, BarChart3 } from 'lucide-react';
+import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Bell, Clock, Calendar as CalendarIcon, MoreHorizontal, Sparkles, BarChart3, ArrowLeft } from 'lucide-react';
 
 interface DoctorActivitiesPageProps {
   initialAction?: 'assign' | 'ai-create' | null;
@@ -14,6 +14,9 @@ interface DoctorActivitiesPageProps {
 export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, onNavigateToClients, onNavigateToFeedback, onNavigateToCalendar, onNavigateToData, onNavigateToSettings }: DoctorActivitiesPageProps) {
   const [filter, setFilter] = useState<'total' | 'assigned' | 'templates'>('assigned');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<'all' | 'Journaling' | 'Mindfulness' | 'Coping Skills'>('all');
+  const [selectedFrequencyFilter, setSelectedFrequencyFilter] = useState<'all' | 'Daily' | 'Anytime'>('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newActivity, setNewActivity] = useState({ title: '', category: 'General', description: '', duration: '', frequency: '' });
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -83,6 +86,8 @@ export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, 
   const filteredActivities = activities.filter(a => {
     if (filter === 'templates' && a.status !== 'templates') return false;
     if (filter === 'assigned' && a.status !== 'assigned') return false;
+    if (selectedCategoryFilter !== 'all' && a.category !== selectedCategoryFilter) return false;
+    if (selectedFrequencyFilter !== 'all' && a.frequency !== selectedFrequencyFilter) return false;
     if (searchQuery && !a.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -111,11 +116,14 @@ export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, 
   return (
     <div className="size-full flex flex-col bg-[#FDFBF7] overflow-auto font-sans text-gray-900 pb-[90px] relative">
       {/* Header */}
-      <header className="px-5 py-5 flex items-center justify-between pb-3">
-        <div className="w-[84px]"></div> {/* spacer for center alignment targeting exact visually balance against left offset vs right button */}
+      <header className="px-5 py-5 flex items-center justify-between pb-3 relative">
+        <button onClick={onNavigateToHome} className="text-gray-700 hover:text-[color:var(--theme-primary)] transition-colors p-2 bg-gray-50 hover:bg-purple-50 rounded-full z-10">
+           <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
+        </button>
         <h1 className="text-[22px] font-bold text-center tracking-tight text-gray-900 absolute left-1/2 -translate-x-1/2">My Activity Library</h1>
-        <button onClick={() => setShowCreateModal(true)} className="bg-[color:var(--theme-dark)] text-white text-[14px] font-semibold py-2 px-3.5 rounded-xl shadow-sm hover:opacity-90 transition-colors z-10 flex items-center justify-center gap-1">
-           <span className="text-lg leading-none">+</span> Create
+        <button className="text-gray-700 hover:text-[color:var(--theme-primary)] transition-colors p-2 bg-gray-50 hover:bg-purple-50 rounded-full relative z-10">
+           <Bell className="w-5 h-5" strokeWidth={2.5} />
+           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
         </button>
       </header>
 
@@ -123,7 +131,7 @@ export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, 
       <main className="flex-1 px-5 max-w-md mx-auto w-full flex flex-col gap-4 relative">
         
         {/* Search */}
-        <div className="relative flex items-center">
+        <div className="flex items-center gap-3">
           <div className="relative flex-1">
              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-[22px] h-[22px] text-gray-500" />
              <input 
@@ -133,10 +141,61 @@ export default function DoctorActivitiesPage({ initialAction, onNavigateToHome, 
                onChange={(e) => setSearchQuery(e.target.value)}
                className="w-full pl-12 pr-[90px] py-4 rounded-[20px] bg-white shadow-sm text-gray-800 placeholder:text-gray-500 font-medium focus:outline-none focus:ring-2 focus:ring-[color:var(--theme-primary)]/20"
              />
-             <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-purple-50 text-[color:var(--theme-dark)] px-4 py-2 rounded-xl text-[14px] font-semibold hover:bg-purple-100 transition-colors flex items-center gap-1.5 shadow-[0_2px_10px_-4px_var(--theme-primary)]">
+             <button
+               onClick={() => setShowFilterMenu(!showFilterMenu)}
+               className={`absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 rounded-xl text-[14px] font-semibold transition-colors flex items-center gap-1.5 shadow-[0_2px_10px_-4px_var(--theme-primary)] ${showFilterMenu || selectedCategoryFilter !== 'all' || selectedFrequencyFilter !== 'all' ? 'bg-[color:var(--theme-dark)] text-white' : 'bg-purple-50 text-[color:var(--theme-dark)] hover:bg-purple-100'}`}
+             >
                Filter <ChevronRight className="w-[14px] h-[14px]" />
              </button>
+
+             {showFilterMenu && (
+               <div className="absolute top-full right-0 mt-3 w-[240px] rounded-2xl border border-gray-100 bg-white p-3 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] z-30 animate-in fade-in slide-in-from-top-2 duration-200">
+                 <div>
+                   <h3 className="px-1 pb-2 text-[11px] font-extrabold uppercase tracking-widest text-gray-400">Category</h3>
+                   <div className="flex flex-wrap gap-2">
+                     {(['all', 'Journaling', 'Mindfulness', 'Coping Skills'] as const).map(option => (
+                       <button
+                         key={option}
+                         onClick={() => setSelectedCategoryFilter(option)}
+                         className={`rounded-full px-3 py-1.5 text-[12px] font-bold transition-colors ${selectedCategoryFilter === option ? 'bg-[color:var(--theme-dark)] text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
+                       >
+                         {option === 'all' ? 'All' : option}
+                       </button>
+                     ))}
+                   </div>
+                 </div>
+
+                 <div className="mt-4">
+                   <h3 className="px-1 pb-2 text-[11px] font-extrabold uppercase tracking-widest text-gray-400">Frequency</h3>
+                   <div className="flex flex-wrap gap-2">
+                     {(['all', 'Daily', 'Anytime'] as const).map(option => (
+                       <button
+                         key={option}
+                         onClick={() => setSelectedFrequencyFilter(option)}
+                         className={`rounded-full px-3 py-1.5 text-[12px] font-bold transition-colors ${selectedFrequencyFilter === option ? 'bg-[color:var(--theme-dark)] text-white' : 'bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
+                       >
+                         {option === 'all' ? 'All' : option}
+                       </button>
+                     ))}
+                   </div>
+                 </div>
+
+                 <button
+                   onClick={() => {
+                     setSelectedCategoryFilter('all');
+                     setSelectedFrequencyFilter('all');
+                     setShowFilterMenu(false);
+                   }}
+                   className="mt-4 w-full rounded-xl border border-dashed border-gray-200 px-3 py-2 text-[12px] font-bold text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-700"
+                 >
+                   Clear Filters
+                 </button>
+               </div>
+             )}
           </div>
+          <button onClick={() => setShowCreateModal(true)} className="shrink-0 bg-[color:var(--theme-dark)] text-white text-[14px] font-semibold py-4 px-4 rounded-[20px] shadow-sm hover:opacity-90 transition-colors flex items-center justify-center gap-1.5">
+             <span className="text-lg leading-none">+</span> Create
+          </button>
         </div>
 
         {/* Tab Filters */}

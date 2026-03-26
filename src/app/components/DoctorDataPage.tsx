@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Bell, Home, Users, ListChecks, Calendar as CalendarIcon, Settings, BarChart3, Activity, Clock, BookOpen, Pill, Smartphone, CheckCircle2, ChevronDown, CheckSquare, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Bell, Home, Users, ListChecks, Calendar as CalendarIcon, Settings, BarChart3, Activity, Clock, BookOpen, Pill, Smartphone, CheckCircle2, ChevronDown, CheckSquare, ChevronLeft, ChevronRight, Sparkles, AlertTriangle, HeartPulse } from 'lucide-react';
 
 interface DoctorDataPageProps {
   onNavigateToHome: () => void;
@@ -15,6 +15,33 @@ export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, 
   const [showClientDropdown, setShowClientDropdown] = useState(false);
   const todayTimelineDate = '2026-03-26';
   const [selectedTimelineDate, setSelectedTimelineDate] = useState(todayTimelineDate);
+
+  const aiSessionSummaryMap = {
+    'Emma L.': {
+      headline: 'Anxiety is trending down overall, but work-related stress spikes are still appearing before late-afternoon sessions.',
+      trend: 'Mood recovered after two lower-scoring days, sleep remained stable, and medication adherence stayed consistent.',
+      pattern: 'Journal entries and symptom check-ins both point to workplace conversations as the main trigger. Breathing exercises were completed on the same days distress scores improved.',
+      risk: 'Moderate short-term relapse risk if workload increases again. Watch for reduced evening decompression and delayed journaling.',
+      sources: ['Journal', 'Wearable', 'Symptoms', 'Medication'],
+      consultNote: 'Recommended pre-session focus: review boundary setting plan and reinforce coping routine before next high-stress workday.',
+    },
+    'James T.': {
+      headline: 'Medication adherence is the main concern, with recent missed doses aligning with dizziness reports and lower motivation.',
+      trend: 'Sleep and wearable recovery stayed mostly flat, but symptom notes show frustration increasing on days medication was skipped.',
+      pattern: 'When reminders are missed in the morning, task completion drops later in the day. Activity engagement improves after structured prompts.',
+      risk: 'Elevated risk for non-adherence over the next week unless reminder friction is reduced.',
+      sources: ['Medication', 'Symptoms', 'Wearable', 'Calendar'],
+      consultNote: 'Recommended pre-session focus: simplify reminder system and confirm whether side effects are causing intentional avoidance.',
+    },
+    'Sarah M.': {
+      headline: 'Recent logs show improving sleep consistency and better emotional regulation following gratitude journaling.',
+      trend: 'Evening rumination decreased, symptom check-ins were milder, and daily routines appeared more stable this week.',
+      pattern: 'Positive sleep nights cluster with completed journaling and reduced screen time before bed.',
+      risk: 'Low immediate risk, but momentum may weaken if bedtime routine becomes inconsistent.',
+      sources: ['Journal', 'Screen Time', 'Symptoms', 'Wearable'],
+      consultNote: 'Recommended pre-session focus: reinforce the journaling habit and identify which parts of the evening routine are most protective.',
+    },
+  } as const;
 
   const timelineLogTemplates = [
     {
@@ -185,6 +212,7 @@ export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, 
     label: formatTimelineLabel(selectedTimelineDate),
     events: getTimelineEventsForDate(selectedTimelineDate),
   };
+  const aiSummary = aiSessionSummaryMap[selectedClient as keyof typeof aiSessionSummaryMap] ?? aiSessionSummaryMap['Emma L.'];
   const timelineEvents = activeTimelineDay.events;
   const isViewingToday = selectedTimelineDate === todayTimelineDate;
 
@@ -246,6 +274,62 @@ export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, 
            )}
          </div>
 
+         <section className="rounded-[28px] border border-purple-100 bg-[linear-gradient(180deg,#FCFAFF_0%,#F7F2FF_100%)] p-5 shadow-[0_12px_35px_-18px_rgba(76,44,143,0.35)]">
+           <div className="flex items-start justify-between gap-4 mb-4">
+             <div>
+               <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-widest text-[color:var(--theme-dark)] shadow-sm">
+                 <Sparkles className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
+                 AI Session Summary
+               </div>
+               <h2 className="mt-3 text-[20px] font-extrabold tracking-tight text-gray-900">Consultation Snapshot</h2>
+               <p className="mt-2 text-[13.5px] font-medium leading-[1.6] text-gray-600">{aiSummary.headline}</p>
+             </div>
+             <div className="rounded-2xl bg-white px-3 py-2 text-right shadow-sm border border-purple-100">
+               <p className="text-[10px] font-extrabold uppercase tracking-widest text-gray-400">Review Timing</p>
+               <p className="mt-1 text-[12px] font-bold text-[color:var(--theme-dark)]">Before / During Session</p>
+             </div>
+           </div>
+
+           <div className="flex flex-wrap gap-2 mb-4">
+             {aiSummary.sources.map(source => (
+               <span key={source} className="rounded-full bg-white px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-gray-500 border border-gray-100 shadow-sm">
+                 {source}
+               </span>
+             ))}
+           </div>
+
+           <div className="space-y-3">
+             <div className="rounded-2xl bg-white p-4 border border-gray-100 shadow-sm">
+               <div className="flex items-center gap-2 mb-2">
+                 <HeartPulse className="w-4 h-4 text-emerald-600" />
+                 <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-gray-400">Relevant Changes</h3>
+               </div>
+               <p className="text-[13px] font-medium leading-[1.6] text-gray-700">{aiSummary.trend}</p>
+             </div>
+
+             <div className="rounded-2xl bg-white p-4 border border-gray-100 shadow-sm">
+               <div className="flex items-center gap-2 mb-2">
+                 <Activity className="w-4 h-4 text-blue-600" />
+                 <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-gray-400">Patterns</h3>
+               </div>
+               <p className="text-[13px] font-medium leading-[1.6] text-gray-700">{aiSummary.pattern}</p>
+             </div>
+
+             <div className="rounded-2xl bg-[#FFF7ED] p-4 border border-orange-100 shadow-sm">
+               <div className="flex items-center gap-2 mb-2">
+                 <AlertTriangle className="w-4 h-4 text-orange-600" />
+                 <h3 className="text-[12px] font-extrabold uppercase tracking-widest text-orange-500">Potential Risk</h3>
+               </div>
+               <p className="text-[13px] font-medium leading-[1.6] text-gray-700">{aiSummary.risk}</p>
+             </div>
+
+             <div className="rounded-2xl bg-[color:var(--theme-dark)] px-4 py-3.5 text-white shadow-lg shadow-purple-900/15">
+               <p className="text-[11px] font-extrabold uppercase tracking-widest text-white/60">Session Prep</p>
+               <p className="mt-1 text-[13px] font-medium leading-[1.6]">{aiSummary.consultNote}</p>
+             </div>
+           </div>
+         </section>
+
          <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 mt-2">
              <div className="flex justify-between items-end mb-5 px-1 mt-3">
                <div>
@@ -266,6 +350,13 @@ export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, 
                       aria-label="View newer timeline log"
                     >
                       <ChevronRight className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setSelectedTimelineDate(todayTimelineDate)}
+                      disabled={isViewingToday}
+                      className="px-3 h-7 rounded-full bg-purple-50 text-[11px] font-extrabold text-[color:var(--theme-dark)] hover:bg-purple-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+                    >
+                      Today
                     </button>
                   </div>
                 </div>

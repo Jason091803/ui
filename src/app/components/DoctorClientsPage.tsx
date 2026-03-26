@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Clock, BarChart3, Calendar as CalendarIcon } from 'lucide-react';
+import { Search, ChevronRight, Home, Users, ListChecks, CheckSquare, Settings, Clock, BarChart3, Calendar as CalendarIcon, Bell, ArrowLeft } from 'lucide-react';
 
 import femaleIcon1 from '../../assets/d2b0f8035a26d66fec4fcf46ab741ed497858fb8.png'; 
 import maleIcon1 from '../../assets/b2c1ba502535293778a6e73cdc21c311f5e2c010.png';
@@ -76,11 +76,14 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
   return (
     <div className="size-full flex flex-col bg-[#FDFBF7] overflow-auto font-sans text-gray-900 pb-20">
       {/* Header */}
-      <header className="px-5 py-5 flex items-center justify-between">
-        <div className="w-24"></div> {/* spacer */}
-        <h1 className="text-[22px] font-bold text-center tracking-tight text-gray-900 flex-1">My Clients</h1>
-        <button onClick={() => setShowAddClientModal(true)} className="bg-[color:var(--theme-dark)] text-white text-sm font-semibold py-2 px-3.5 rounded-xl shadow-sm hover:opacity-90 transition-colors">
-           + Add Client
+      <header className="px-5 py-5 flex items-center justify-between relative">
+        <button onClick={onNavigateToHome} className="text-gray-700 hover:text-[color:var(--theme-primary)] transition-colors p-2 bg-gray-50 hover:bg-purple-50 rounded-full">
+          <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
+        </button>
+        <h1 className="text-[22px] font-bold text-center tracking-tight text-gray-900 absolute left-1/2 -translate-x-1/2">My Clients</h1>
+        <button className="text-gray-700 hover:text-[color:var(--theme-primary)] transition-colors p-2 bg-gray-50 hover:bg-purple-50 rounded-full relative">
+          <Bell className="w-5 h-5" strokeWidth={2.5} />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
         </button>
       </header>
 
@@ -88,7 +91,7 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
       <main className="flex-1 px-5 max-w-md mx-auto w-full flex flex-col gap-4">
         
         {/* Search */}
-        <div className="relative flex items-center">
+        <div className="relative flex items-center gap-3">
           <div className="relative flex-1">
              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
              <input 
@@ -105,6 +108,9 @@ export default function DoctorClientsPage({ onNavigateToHome, onNavigateToActivi
                Filter <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showCategoryFilter ? 'rotate-90' : ''}`} />
              </button>
           </div>
+          <button onClick={() => setShowAddClientModal(true)} className="shrink-0 bg-[color:var(--theme-dark)] text-white text-sm font-semibold py-4 px-4 rounded-[20px] shadow-sm hover:opacity-90 transition-colors">
+             + Add Client
+          </button>
           
           {/* Category Dropdown Area */}
           {showCategoryFilter && (

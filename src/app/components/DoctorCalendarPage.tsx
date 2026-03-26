@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Bell, Home, Users, ListChecks, CheckSquare, Calendar as CalendarIcon, Settings, BarChart3, ChevronLeft, ChevronRight, Clock, MapPin, Video, UserRound } from 'lucide-react';
+import { Bell, Home, Users, ListChecks, CheckSquare, Calendar as CalendarIcon, Settings, BarChart3, ChevronLeft, ChevronRight, Clock, MapPin, Video, UserRound, ArrowLeft } from 'lucide-react';
 
 interface DoctorCalendarPageProps {
   onNavigateToHome: () => void;
@@ -26,6 +26,13 @@ const monthNames = [
 ];
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const toDateKey = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
 
 const appointmentMap: Record<string, Appointment[]> = {
   '2026-03-24': [
@@ -104,9 +111,11 @@ const appointmentMap: Record<string, Appointment[]> = {
 };
 
 export default function DoctorCalendarPage({ onNavigateToHome, onNavigateToClients, onNavigateToActivities, onNavigateToFeedback, onNavigateToData, onNavigateToSettings }: DoctorCalendarPageProps) {
-  const [currentMonth, setCurrentMonth] = useState(2);
-  const [currentYear, setCurrentYear] = useState(2026);
-  const [selectedDate, setSelectedDate] = useState('2026-03-26');
+  const today = new Date();
+  const todayKey = toDateKey(today);
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  const [selectedDate, setSelectedDate] = useState(todayKey);
 
   const calendarDays = useMemo(() => {
     const firstDay = new Date(currentYear, currentMonth, 1);
@@ -171,10 +180,23 @@ export default function DoctorCalendarPage({ onNavigateToHome, onNavigateToClien
       year: 'numeric',
     }).format(new Date(`${dateStr}T12:00:00`));
 
+  const jumpToToday = () => {
+    setCurrentMonth(today.getMonth());
+    setCurrentYear(today.getFullYear());
+    setSelectedDate(todayKey);
+  };
+
+  const isViewingToday =
+    selectedDate === todayKey &&
+    currentMonth === today.getMonth() &&
+    currentYear === today.getFullYear();
+
   return (
     <div className="size-full flex flex-col bg-[#FDFBF7] overflow-auto font-sans text-gray-900 pb-20">
       <header className="px-5 py-5 flex items-center justify-between bg-white/80 backdrop-blur-md sticky top-0 z-40 shadow-sm border-b border-gray-100">
-        <div className="w-8" />
+        <button onClick={onNavigateToHome} className="text-gray-700 hover:text-[color:var(--theme-primary)] transition-colors p-2 bg-gray-50 hover:bg-purple-50 rounded-full z-10">
+          <ArrowLeft className="w-5 h-5" strokeWidth={2.5} />
+        </button>
         <h1 className="text-[22px] font-bold text-center tracking-tight text-gray-900 absolute left-1/2 -translate-x-1/2">Clinical Calendar</h1>
         <button className="text-gray-700 hover:text-[color:var(--theme-primary)] transition-colors p-1 bg-gray-50 hover:bg-purple-50 rounded-full relative">
           <Bell className="w-5 h-5" strokeWidth={2.5} />
@@ -197,17 +219,26 @@ export default function DoctorCalendarPage({ onNavigateToHome, onNavigateToClien
         </div>
 
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-5">
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center justify-between mb-5 gap-3">
             <button onClick={() => navigateMonth('prev')} className="w-10 h-10 rounded-full bg-gray-50 hover:bg-purple-50 text-gray-500 hover:text-[color:var(--theme-dark)] flex items-center justify-center transition-colors">
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <div className="text-center">
+            <div className="text-center flex-1">
               <h2 className="text-[20px] font-extrabold text-gray-900">{monthNames[currentMonth]} {currentYear}</h2>
               <p className="text-[13px] text-gray-500 font-medium mt-1">Tap a date to inspect clinical appointments</p>
             </div>
-            <button onClick={() => navigateMonth('next')} className="w-10 h-10 rounded-full bg-gray-50 hover:bg-purple-50 text-gray-500 hover:text-[color:var(--theme-dark)] flex items-center justify-center transition-colors">
-              <ChevronRight className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={jumpToToday}
+                disabled={isViewingToday}
+                className="px-3.5 h-10 rounded-full bg-purple-50 text-[13px] font-extrabold text-[color:var(--theme-dark)] hover:bg-purple-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Today
+              </button>
+              <button onClick={() => navigateMonth('next')} className="w-10 h-10 rounded-full bg-gray-50 hover:bg-purple-50 text-gray-500 hover:text-[color:var(--theme-dark)] flex items-center justify-center transition-colors">
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-7 gap-2 text-center mb-3">
