@@ -15,6 +15,11 @@ interface DayData {
     completedTime: string;
     duration: string;
   }>;
+  medications?: Array<{
+    name: string;
+    instruction: string;
+    taken: boolean;
+  }>;
   health: {
     screenTime: string;
     mood: string;
@@ -141,6 +146,9 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
   const dayDataMap: Record<number, DayData> = {
     20: {
       activities: [],
+      medications: [
+        { name: 'Vitamin D3 - 1000 IU', instruction: 'Take 1 capsule', taken: true }
+      ],
       health: {
         screenTime: '2 hours 45 minutes',
         mood: 'Calm',
@@ -158,6 +166,9 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
     23: {
       activities: [
         { name: 'Cognitive Puzzle', icon: '🧩', completedTime: '2:00 PM', duration: '15 min' },
+      ],
+      medications: [
+        { name: 'Aspirin - 81mg', instruction: 'Take 1 pill', taken: false }
       ],
       health: {
         screenTime: '4 hours 30 minutes',
@@ -187,6 +198,10 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
       activities: [
         { name: 'Mindfulness Meditation', icon: '🧘', completedTime: '8:00 AM', duration: '10 min' },
         { name: 'Daily Mood Journal', icon: '📝', completedTime: '9:30 AM', duration: '5 min' },
+      ],
+      medications: [
+        { name: 'Aspirin - 81mg', instruction: 'Take 1 pill after breakfast', taken: true },
+        { name: 'Vitamin D3 - 1000 IU', instruction: 'Take 1 capsule at noon', taken: false }
       ],
       health: {
         screenTime: '3 hours 24 minutes',
@@ -454,13 +469,20 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
 
                   <div className="flex-1">
                     {dayData && dayData.activities.length > 0 ? (
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 mb-1">
                         {dayData.activities.map((activity, idx) => (
                           <span key={idx} className="text-2xl">{activity.icon}</span>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500">No activities</p>
+                      <p className="text-gray-500 font-medium text-sm mb-1">No activities</p>
+                    )}
+                    {dayData && dayData.medications && dayData.medications.length > 0 && (
+                      <div className="flex items-center gap-1.5 mt-1 border-t border-gray-100 pt-1">
+                        {dayData.medications.map((med, idx) => (
+                          <span key={`med-${idx}`} className={`text-lg ${med.taken ? 'opacity-100' : 'opacity-40 grayscale'} transition-opacity`} title={med.name}>💊</span>
+                        ))}
+                      </div>
                     )}
                   </div>
 
@@ -561,11 +583,11 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
 
             {/* Modal Content */}
             <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-200 overflow-y-auto">
-              {/* Left Side - Activities */}
+              {/* Left Side - Activities & Medications */}
               <div className="flex-1 p-6">
                 <h3 className="text-xl font-medium mb-4 text-gray-800">Completed Activities</h3>
 
-                <div className="space-y-3">
+                <div className="space-y-3 mb-8">
                   {selectedDayData && selectedDayData.activities.length > 0 ? (
                     selectedDayData.activities.map((activity, index) => (
                       <div key={index} className="bg-[#F5F1E8] rounded-2xl p-4 flex items-center gap-4">
@@ -581,7 +603,29 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500 text-center py-8">No activities completed on this day</p>
+                    <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-2xl">No activities recorded</p>
+                  )}
+                </div>
+
+                <h3 className="text-xl font-medium mb-4 text-gray-800">Medications</h3>
+                <div className="space-y-3">
+                  {selectedDayData && selectedDayData.medications && selectedDayData.medications.length > 0 ? (
+                    selectedDayData.medications.map((med, index) => (
+                      <div key={`med-${index}`} className="bg-[#F5F1E8] rounded-2xl p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-sm ${index % 2 === 0 ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>💊</div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-gray-800">{med.name}</h4>
+                            <p className="text-sm text-gray-600">{med.instruction}</p>
+                          </div>
+                        </div>
+                        <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors shadow-sm ${med.taken ? 'border-green-500 bg-green-500' : 'border-gray-300 bg-white'}`}>
+                          {med.taken && <span className="text-white text-lg font-bold leading-none block pb-0.5">✓</span>}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-2xl">No medications mapped</p>
                   )}
                 </div>
               </div>

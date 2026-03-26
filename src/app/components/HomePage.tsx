@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Bell, Home, Users, ListChecks, Calendar, Settings, BarChart3 } from 'lucide-react';
 import healthyIcon from '../../assets/d2b0f8035a26d66fec4fcf46ab741ed497858fb8.png';
 import headacheIcon from '../../assets/b2c1ba502535293778a6e73cdc21c311f5e2c010.png';
@@ -18,6 +19,17 @@ interface HomePageProps {
 }
 
 export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, onNavigateToConnections, onNavigateToActivities, onNavigateToCalendar, onNavigateToData }: HomePageProps) {
+  const [medications, setMedications] = useState([
+    { id: 1, name: 'Aspirin - 81mg', instruction: 'Take 1 pill after breakfast', taken: true },
+    { id: 2, name: 'Vitamin D3 - 1000 IU', instruction: 'Take 1 capsule at noon', taken: false },
+  ]);
+
+  const toggleMedication = (id: number) => {
+    setMedications(medications.map(med => 
+      med.id === id ? { ...med, taken: !med.taken } : med
+    ));
+  };
+
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
       {/* Header */}
@@ -108,37 +120,27 @@ export default function HomePage({ onNavigateToLogin, onNavigateToSymptomList, o
 
         {/* Medication Tracking Card */}
         <div className="bg-white rounded-2xl shadow-md p-6 mb-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center mb-4">
             <h2 className="text-lg">Daily Medication</h2>
-            <button className="text-[#6B46C1] text-sm hover:text-[#5a3ba3]">Add/Edit</button>
           </div>
           <div className="space-y-3">
-             {/* Medication Item 1 */}
-             <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
-               <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-lg shadow-sm">💊</div>
-                 <div>
-                   <h3 className="text-sm font-medium text-gray-800">Aspirin - 81mg</h3>
-                   <p className="text-xs text-gray-500">Take 1 pill after breakfast</p>
+             {medications.map(med => (
+               <div key={med.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
+                 <div className="flex items-center gap-3">
+                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-sm ${med.id === 1 ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600'}`}>💊</div>
+                   <div>
+                     <h3 className="text-sm font-medium text-gray-800">{med.name}</h3>
+                     <p className="text-xs text-gray-500">{med.instruction}</p>
+                   </div>
                  </div>
+                 <button 
+                   onClick={() => toggleMedication(med.id)}
+                   className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors shadow-sm ${med.taken ? 'border-green-500 bg-green-500 text-white' : 'border-gray-300 bg-white hover:bg-gray-100'}`}
+                 >
+                   {med.taken && <span className="text-xs font-bold leading-none block pb-0.5">✓</span>}
+                 </button>
                </div>
-               <button className="w-6 h-6 rounded-full border-2 border-green-500 bg-green-500 flex items-center justify-center text-white">
-                 <span className="text-xs">✓</span>
-               </button>
-             </div>
-
-             {/* Medication Item 2 */}
-             <div className="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
-               <div className="flex items-center gap-3">
-                 <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 text-lg shadow-sm">💊</div>
-                 <div>
-                   <h3 className="text-sm font-medium text-gray-800">Vitamin D3 - 1000 IU</h3>
-                   <p className="text-xs text-gray-500">Take 1 capsule at noon</p>
-                 </div>
-               </div>
-               <button className="w-6 h-6 rounded-full border-2 border-gray-300 bg-white flex items-center justify-center hover:bg-gray-50 transition-colors">
-               </button>
-             </div>
+             ))}
           </div>
         </div>
 
