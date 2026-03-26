@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Search, MoreVertical, Home, Users, ListChecks, Calendar, Settings, ChevronDown, ChevronUp, ChevronRight, BarChart3 } from 'lucide-react';
+import { ArrowLeft, Search, MoreVertical, Home, Users, ListChecks, Calendar, Settings, ChevronDown, ChevronUp, ChevronRight, BarChart3, Bell } from 'lucide-react';
 
 interface ConnectionsPageProps {
   onNavigateToHome: () => void;
@@ -17,12 +17,18 @@ export default function ConnectionsPage({ onNavigateToHome, onNavigateToActiviti
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
       {/* Header */}
       <header className="bg-[#F5F1E8] px-4 py-4">
-        <button
-          onClick={onNavigateToHome}
-          className="text-gray-700 hover:text-gray-900 mb-4"
-        >
-          <ArrowLeft className="w-6 h-6" />
-        </button>
+        <div className="flex justify-between items-center mb-4">
+          <button
+            onClick={onNavigateToHome}
+            className="text-gray-700 hover:text-gray-900"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <button className="text-gray-500 hover:text-[color:var(--theme-primary)] transition-colors relative">
+            <Bell className="w-6 h-6" />
+            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-[#F5F1E8]"></span>
+          </button>
+        </div>
         <h1 className="text-2xl text-center mb-4">Connections</h1>
 
         {/* Search Bar */}

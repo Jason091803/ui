@@ -5,7 +5,7 @@ interface LoginPageProps {
   onNavigateToReset: () => void;
   onNavigateToTerms: () => void;
   onNavigateToPrivacy: () => void;
-  onNavigateToHome: () => void;
+  onNavigateToHome: (role?: 'patient' | 'doctor') => void;
 }
 
 export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNavigateToTerms, onNavigateToPrivacy, onNavigateToHome }: LoginPageProps) {
@@ -17,7 +17,7 @@ export default function LoginPage({ onNavigateToSignup, onNavigateToReset, onNav
     e.preventDefault();
     console.log('Login attempt:', { email, password, userType });
     // Navigate to home page
-    onNavigateToHome();
+    onNavigateToHome(userType);
   };
 
   return (

@@ -13,9 +13,12 @@ import ActivitiesPage from './components/ActivitiesPage';
 import CalendarPage from './components/CalendarPage';
 import DataPage from './components/DataPage';
 import SettingsPage from './components/SettingsPage';
+import DoctorHomePage from './components/DoctorHomePage';
+import DoctorClientsPage from './components/DoctorClientsPage';
+import DoctorActivitiesPage from './components/DoctorActivitiesPage';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset' | 'terms-of-service' | 'privacy-policy' | 'home' | 'full-symptom-list' | 'connections' | 'activities' | 'calendar' | 'data' | 'settings'>('login');
+  const [currentPage, setCurrentPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset' | 'terms-of-service' | 'privacy-policy' | 'home' | 'doctor-home' | 'doctor-clients' | 'doctor-activities' | 'full-symptom-list' | 'connections' | 'activities' | 'calendar' | 'data' | 'settings'>('login');
   const [signupEmail, setSignupEmail] = useState('');
   const [resetEmail, setResetEmail] = useState('');
   const [previousPage, setPreviousPage] = useState<'login' | 'signup' | 'create-account' | 'reset-password' | 'verify-reset'>('login');
@@ -34,7 +37,7 @@ export default function App() {
             setPreviousPage('login');
             setCurrentPage('privacy-policy');
           }}
-          onNavigateToHome={() => setCurrentPage('home')}
+          onNavigateToHome={(role) => setCurrentPage(role === 'doctor' ? 'doctor-home' : 'home')}
         />
       ) : currentPage === 'home' ? (
         <HomePage
@@ -45,6 +48,25 @@ export default function App() {
           onNavigateToCalendar={() => setCurrentPage('calendar')}
           onNavigateToData={() => setCurrentPage('data')}
           onNavigateToSettings={() => setCurrentPage('settings')}
+        />
+      ) : currentPage === 'doctor-home' ? (
+        <DoctorHomePage 
+           onNavigateToLogin={() => setCurrentPage('login')}
+           onNavigateToConnections={() => setCurrentPage('doctor-clients')}
+           onNavigateToActivities={() => setCurrentPage('doctor-activities')}
+           onNavigateToSettings={() => setCurrentPage('settings')}
+        />
+      ) : currentPage === 'doctor-clients' ? (
+        <DoctorClientsPage 
+           onNavigateToHome={() => setCurrentPage('doctor-home')}
+           onNavigateToActivities={() => setCurrentPage('doctor-activities')}
+           onNavigateToSettings={() => setCurrentPage('settings')}
+        />
+      ) : currentPage === 'doctor-activities' ? (
+        <DoctorActivitiesPage 
+           onNavigateToHome={() => setCurrentPage('doctor-home')}
+           onNavigateToClients={() => setCurrentPage('doctor-clients')}
+           onNavigateToSettings={() => setCurrentPage('settings')}
         />
       ) : currentPage === 'data' ? (
         <DataPage
