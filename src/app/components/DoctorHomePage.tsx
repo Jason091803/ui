@@ -19,7 +19,7 @@ interface DoctorHomePageProps {
 }
 
 export default function DoctorHomePage({ doctorName, onNavigateToLogin, onNavigateToConnections, onNavigateToActivities, onNavigateToFeedback, onNavigateToCalendar, onNavigateToData, onNavigateToSettings }: DoctorHomePageProps) {
-  const [activeTab, setActiveTab] = useState<'Mood' | 'Sleep' | 'Activity' | 'Symptoms' | 'Medication'>('Mood');
+  const [activeTab, setActiveTab] = useState<'Mood' | 'Screen Time' | 'Activity' | 'Symptoms' | 'Medication'>('Mood');
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const [infoModalClient, setInfoModalClient] = useState<string | null>(null);
   const [createdActivitiesCount, setCreatedActivitiesCount] = useState(0);
@@ -203,7 +203,7 @@ export default function DoctorHomePage({ doctorName, onNavigateToLogin, onNaviga
            <h2 className="text-[17px] font-bold text-[color:var(--theme-dark)] mb-3">{selectedClient}'s Progress <span className="text-gray-400 font-medium">— Last 7 Days</span></h2>
            
            <div className="flex gap-1 overflow-x-auto no-scrollbar pb-1 mb-5">
-              {['Mood', 'Sleep', 'Activity', 'Symptoms', 'Medication'].map((tab) => (
+              {['Mood', 'Screen Time', 'Activity', 'Symptoms', 'Medication'].map((tab) => (
                 <button 
                   key={tab}
                   onClick={() => setActiveTab(tab as any)}

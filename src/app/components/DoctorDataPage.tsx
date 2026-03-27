@@ -416,7 +416,7 @@ export default function DoctorDataPage({ onNavigateToHome, onNavigateToClients, 
           </button>
           <button onClick={onNavigateToActivities} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-14">
             <ListChecks className="w-[22px] h-[22px]" />
-            <span className="text-[11px] font-semibold">Assign</span>
+            <span className="text-[11px] font-semibold">Activities</span>
           </button>
           <button onClick={onNavigateToFeedback} className="flex flex-col items-center gap-1.5 text-gray-400 hover:text-[color:var(--theme-primary)] transition-colors w-14">
             <CheckSquare className="w-[22px] h-[22px]" />
