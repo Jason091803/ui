@@ -16,6 +16,13 @@ interface DayData {
     completedTime: string;
     duration: string;
   }>;
+  appointments?: Array<{
+    doctor: string;
+    time: string;
+    format: 'In person' | 'Video';
+    focus: string;
+    location: string;
+  }>;
   medications?: Array<{
     name: string;
     instruction: string;
@@ -179,6 +186,15 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
     },
     24: {
       activities: [],
+      appointments: [
+        {
+          doctor: 'Dr. Alistair Finch',
+          time: '9:00 AM',
+          format: 'Video',
+          focus: 'Weekly mood review',
+          location: 'Telehealth session',
+        }
+      ],
       health: {
         screenTime: '5 hours 48 minutes',
         mood: 'Stressed',
@@ -199,6 +215,15 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
       activities: [
         { name: 'Mindfulness Meditation', icon: '🧘', completedTime: '8:00 AM', duration: '10 min' },
         { name: 'Daily Mood Journal', icon: '📝', completedTime: '9:30 AM', duration: '5 min' },
+      ],
+      appointments: [
+        {
+          doctor: 'Dr. Alistair Finch',
+          time: '10:00 AM',
+          format: 'In person',
+          focus: 'Boundary setting session',
+          location: 'Clinic Room 3',
+        }
       ],
       medications: [
         { name: 'Aspirin - 81mg', instruction: 'Take 1 pill after breakfast', taken: true },
@@ -241,15 +266,15 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
 
   const selectedDayData = selectedDay ? dayDataMap[selectedDay] : null;
 
-  // Day markers: available (doctor available), feedback (doctor gave feedback), completed (all activities done)
-  const dayMarkers: Record<number, Array<'available' | 'feedback' | 'completed'>> = {
-    20: ['available'],
-    22: ['available'],
-    23: ['available', 'feedback'],
-    24: ['feedback'],
+  // Day markers: appointment (doctor appointment), feedback (doctor gave feedback), completed (all activities done)
+  const dayMarkers: Record<number, Array<'appointment' | 'feedback' | 'completed'>> = {
+    20: [],
+    22: [],
+    23: ['feedback'],
+    24: ['appointment', 'feedback'],
     25: ['completed', 'feedback'],
-    26: ['completed', 'feedback'],
-    27: ['available'],
+    26: ['appointment', 'completed', 'feedback'],
+    27: [],
   };
 
   // Dynamic calendar days generation
@@ -376,8 +401,8 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
         <div className="border-t border-b border-gray-300 py-3 mb-4">
           <div className="flex items-center justify-center gap-6 text-sm">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-[color:var(--theme-primary)]"></div>
-              <span className="text-gray-700">Available</span>
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <span className="text-gray-700">Appointment</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500"></div>
@@ -430,7 +455,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                         <div
                           key={idx}
                           className={`w-1.5 h-1.5 rounded-full ${
-                            marker === 'available' ? 'bg-[color:var(--theme-primary)]' :
+                            marker === 'appointment' ? 'bg-red-500' :
                             marker === 'feedback' ? 'bg-blue-500' :
                             'bg-green-500'
                           }`}
@@ -478,6 +503,11 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                     ) : (
                       <p className="text-gray-500 font-medium text-sm mb-1">No activities</p>
                     )}
+                    {dayData && dayData.appointments && dayData.appointments.length > 0 && (
+                      <p className="text-sm font-medium text-[color:var(--theme-primary)]">
+                        {dayData.appointments[0].time} with {dayData.appointments[0].doctor}
+                      </p>
+                    )}
                     {dayData && dayData.medications && dayData.medications.length > 0 && (
                       <div className="flex items-center gap-1.5 mt-1 border-t border-gray-100 pt-1">
                         {dayData.medications.map((med, idx) => (
@@ -493,7 +523,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                         <div
                           key={idx}
                           className={`w-2 h-2 rounded-full ${
-                            marker === 'available' ? 'bg-[color:var(--theme-primary)]' :
+                            marker === 'appointment' ? 'bg-red-500' :
                             marker === 'feedback' ? 'bg-blue-500' :
                             'bg-green-500'
                           }`}
@@ -514,7 +544,17 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
               <span className="text-[color:var(--theme-primary)] font-medium">Today</span>
               <span className="text-gray-600 ml-2">March 26, 2026</span>
             </h3>
-            <p className="text-gray-500 text-center py-8">No Activity Due Today</p>
+            <div className="space-y-3 pt-2">
+              <div className="rounded-2xl bg-[#F5F1E8] p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Doctor Appointment</p>
+                <p className="mt-1 text-base font-medium text-gray-800">10:00 AM with Dr. Alistair Finch</p>
+                <p className="mt-1 text-sm text-gray-600">Boundary setting session · In person · Clinic Room 3</p>
+              </div>
+              <div className="rounded-2xl bg-gray-50 p-4">
+                <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Activities Today</p>
+                <p className="mt-1 text-sm text-gray-600">Mindfulness Meditation and Daily Mood Journal completed before your appointment.</p>
+              </div>
+            </div>
           </div>
         )}
       </main>
@@ -586,9 +626,31 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
             </div>
 
             {/* Modal Content */}
-            <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-200 overflow-y-auto">
+            <div className="grid grid-cols-2 divide-x divide-gray-200 overflow-y-auto">
               {/* Left Side - Activities & Medications */}
-              <div className="flex-1 p-6">
+              <div className="min-w-0 p-6">
+                <h3 className="text-xl font-medium mb-4 text-gray-800">Appointments</h3>
+
+                <div className="space-y-3 mb-8">
+                  {selectedDayData && selectedDayData.appointments && selectedDayData.appointments.length > 0 ? (
+                    selectedDayData.appointments.map((appointment, index) => (
+                      <div key={`appointment-${index}`} className="bg-[#F5F1E8] rounded-2xl p-4 flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-full bg-purple-100 text-[color:var(--theme-primary)] flex items-center justify-center flex-shrink-0">
+                          <CalendarIcon className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-800">{appointment.doctor}</h4>
+                          <p className="text-sm text-gray-600">{appointment.time} · {appointment.format}</p>
+                          <p className="text-sm text-gray-600">{appointment.focus}</p>
+                          <p className="text-sm text-gray-500">{appointment.location}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-center py-4 bg-gray-50 rounded-2xl">No doctor appointments scheduled</p>
+                  )}
+                </div>
+
                 <h3 className="text-xl font-medium mb-4 text-gray-800">Completed Activities</h3>
 
                 <div className="space-y-3 mb-8">
@@ -635,7 +697,7 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
               </div>
 
               {/* Right Side - Health & Mood */}
-              <div className="flex-1 p-6 bg-gray-50">
+              <div className="min-w-0 bg-gray-50 p-6">
                 <h3 className="text-xl font-medium mb-4 text-gray-800">Health & Mood</h3>
 
                 {selectedDayData ? (
@@ -669,10 +731,10 @@ export default function CalendarPage({ onNavigateToHome, onNavigateToConnections
                       <div className="bg-white rounded-2xl p-4">
                         <h4 className="font-medium text-gray-800 mb-3">Day Status</h4>
                         <div className="space-y-2">
-                          {dayMarkers[selectedDay].includes('available') && (
+                          {dayMarkers[selectedDay].includes('appointment') && (
                             <div className="flex items-center gap-2">
-                              <div className="w-3 h-3 rounded-full bg-[color:var(--theme-primary)]"></div>
-                              <span className="text-gray-700">Doctor Available</span>
+                              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                              <span className="text-gray-700">Doctor Appointment Scheduled</span>
                             </div>
                           )}
                           {dayMarkers[selectedDay].includes('feedback') && (
