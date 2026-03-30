@@ -25,12 +25,47 @@ interface HomePageProps {
     { id: 1, name: 'Aspirin - 81mg', instruction: 'Take 1 pill after breakfast', taken: true },
     { id: 2, name: 'Vitamin D3 - 1000 IU', instruction: 'Take 1 capsule at noon', taken: false },
   ]);
+  const symptomOptions = [
+    { id: 'healthy', label: 'Healthy', icon: healthyIcon },
+    { id: 'headache', label: 'Headache', icon: headacheIcon },
+    { id: 'dizziness', label: 'Dizziness', icon: dizzinessIcon },
+    { id: 'fever', label: 'Fever', icon: feverIcon },
+    { id: 'cough', label: 'Cough', icon: coughIcon },
+    { id: 'sore-throat', label: 'Sore Throat', icon: soreThroatIcon },
+    { id: 'sneezing', label: 'Sneezing', icon: sneezingIcon },
+    { id: 'loss-of-appetite', label: 'Loss of Appetite', icon: lossOfAppetiteIcon },
+  ] as const;
+  const [selectedSymptoms, setSelectedSymptoms] = useState<Record<string, number>>({});
 
   const toggleMedication = (id: number) => {
     setMedications(medications.map(med => 
       med.id === id ? { ...med, taken: !med.taken } : med
     ));
   };
+
+  const toggleSymptom = (symptomId: string) => {
+    if (symptomId === 'healthy') {
+      setSelectedSymptoms({});
+      return;
+    }
+
+    setSelectedSymptoms((prev) => {
+      if (prev[symptomId]) {
+        const next = { ...prev };
+        delete next[symptomId];
+        return next;
+      }
+      return { ...prev, [symptomId]: 5 };
+    });
+  };
+
+  const updateSymptomSeverity = (symptomId: string, severity: number) => {
+    setSelectedSymptoms((prev) => ({ ...prev, [symptomId]: severity }));
+  };
+
+  const activeSymptoms = symptomOptions.filter(
+    (symptom) => symptom.id !== 'healthy' && selectedSymptoms[symptom.id]
+  );
 
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
@@ -71,46 +106,82 @@ interface HomePageProps {
           <p className="text-sm text-gray-600 mb-4">Today's Symptoms</p>
 
           <div className="grid grid-cols-4 gap-3 mb-4">
-            {/* Healthy/No Symptoms - First */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={healthyIcon} alt="Healthy" className="w-full h-full object-contain" />
-            </button>
+            {symptomOptions.map((symptom) => {
+              const isHealthy = symptom.id === 'healthy';
+              const isSelected = isHealthy ? activeSymptoms.length === 0 : Boolean(selectedSymptoms[symptom.id]);
 
-            {/* Headache */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={headacheIcon} alt="Headache" className="w-full h-full object-contain" />
-            </button>
-
-            {/* Dizziness */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={dizzinessIcon} alt="Dizziness" className="w-full h-full object-contain" />
-            </button>
-
-            {/* Fever / Low Fever */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={feverIcon} alt="Fever" className="w-full h-full object-contain" />
-            </button>
-
-            {/* Cough */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={coughIcon} alt="Cough" className="w-full h-full object-contain" />
-            </button>
-
-            {/* Sore Throat */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={soreThroatIcon} alt="Sore Throat" className="w-full h-full object-contain" />
-            </button>
-
-            {/* Sneezing */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={sneezingIcon} alt="Sneezing" className="w-full h-full object-contain" />
-            </button>
-
-            {/* Loss of Appetite */}
-            <button className="flex items-center justify-center p-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <img src={lossOfAppetiteIcon} alt="Loss of Appetite" className="w-full h-full object-contain" />
-            </button>
+              return (
+                <button
+                  key={symptom.id}
+                  onClick={() => toggleSymptom(symptom.id)}
+                  className={`rounded-2xl border p-2 transition-colors ${isSelected ? 'border-[color:var(--theme-primary)] bg-purple-50 shadow-sm' : 'border-transparent hover:bg-gray-50'}`}
+                >
+                  <img src={symptom.icon} alt={symptom.label} className="w-full h-full object-contain" />
+                </button>
+              );
+            })}
           </div>
+
+          {activeSymptoms.length > 0 ? (
+            <div className="mb-4 space-y-3 rounded-2xl bg-[#F9F6EF] p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-800">Symptom Intensity</h3>
+                  <p className="text-xs text-gray-500">Choose how uncomfortable each symptom feels today.</p>
+                </div>
+                <button
+                  onClick={() => setSelectedSymptoms({})}
+                  className="text-xs font-medium text-[color:var(--theme-primary)] hover:text-[color:var(--theme-secondary)]"
+                >
+                  Clear all
+                </button>
+              </div>
+
+              {activeSymptoms.map((symptom) => (
+                <div key={symptom.id} className="rounded-2xl bg-white p-4 shadow-sm">
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-gray-50 p-1.5">
+                        <img src={symptom.icon} alt={symptom.label} className="h-full w-full object-contain" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-semibold text-gray-800">{symptom.label}</h4>
+                        <p className="text-xs text-gray-500">Current intensity</p>
+                      </div>
+                    </div>
+                    <div className="rounded-full bg-purple-50 px-3 py-1 text-sm font-semibold text-[color:var(--theme-primary)]">
+                      {selectedSymptoms[symptom.id]}/10
+                    </div>
+                  </div>
+
+                  <input
+                    type="range"
+                    min="1"
+                    max="10"
+                    value={selectedSymptoms[symptom.id]}
+                    onChange={(e) => updateSymptomSeverity(symptom.id, Number(e.target.value))}
+                    className="w-full accent-[color:var(--theme-primary)]"
+                  />
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {Array.from({ length: 10 }, (_, index) => index + 1).map((level) => (
+                      <button
+                        key={level}
+                        onClick={() => updateSymptomSeverity(symptom.id, level)}
+                        className={`h-8 w-8 rounded-full text-xs font-semibold transition-colors ${selectedSymptoms[symptom.id] === level ? 'bg-[color:var(--theme-primary)] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mb-4 rounded-2xl bg-green-50 px-4 py-3 text-sm text-green-700">
+              Healthy is selected. Choose any symptom above if you want to record how uncomfortable it feels today.
+            </div>
+          )}
 
           <button
             onClick={onNavigateToSymptomList}
