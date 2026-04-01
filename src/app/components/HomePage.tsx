@@ -25,6 +25,7 @@ interface HomePageProps {
     { id: 1, name: 'Aspirin - 81mg', instruction: 'Take 1 pill after breakfast', taken: true },
     { id: 2, name: 'Vitamin D3 - 1000 IU', instruction: 'Take 1 capsule at noon', taken: false },
   ]);
+  const [sleepScore, setSleepScore] = useState(4);
   const symptomOptions = [
     { id: 'healthy', label: 'Healthy', icon: healthyIcon },
     { id: 'headache', label: 'Headache', icon: headacheIcon },
@@ -66,6 +67,19 @@ interface HomePageProps {
   const activeSymptoms = symptomOptions.filter(
     (symptom) => symptom.id !== 'healthy' && selectedSymptoms[symptom.id]
   );
+  const sleepDescriptions: Record<number, string> = {
+    1: 'Very poor. Hardly slept and woke up exhausted.',
+    2: 'Poor. Sleep was broken and not very restful.',
+    3: 'Okay. Some rest, but still felt tired after waking up.',
+    4: 'Good. Slept fairly well and woke up mostly refreshed.',
+    5: 'Excellent. Slept deeply and woke up feeling fully rested.',
+  };
+  const sleepSummary =
+    sleepScore >= 4
+      ? 'Great sleep quality'
+      : sleepScore >= 3
+        ? 'Moderate sleep quality'
+        : 'Poor sleep quality';
 
   return (
     <div className="size-full flex flex-col bg-[#F5F1E8] overflow-auto">
@@ -97,6 +111,44 @@ interface HomePageProps {
             <button className="text-4xl hover:scale-110 transition-transform">😐</button>
             <button className="text-4xl hover:scale-110 transition-transform">😟</button>
             <button className="text-4xl hover:scale-110 transition-transform">😰</button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-md p-6 mb-4">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-lg">Sleep</h2>
+              <p className="text-sm text-gray-600">Rate how well you slept last night</p>
+            </div>
+            <div className="rounded-full bg-indigo-50 px-3 py-1 text-sm font-semibold text-indigo-700">
+              {sleepScore}/5
+            </div>
+          </div>
+
+          <input
+            type="range"
+            min="1"
+            max="5"
+            value={sleepScore}
+            onChange={(e) => setSleepScore(Number(e.target.value))}
+            className="w-full accent-[color:var(--theme-primary)]"
+          />
+
+          <div className="mt-5 flex justify-between gap-3">
+            {Array.from({ length: 5 }, (_, index) => index + 1).map((level) => (
+              <button
+                key={level}
+                onClick={() => setSleepScore(level)}
+                className={`h-9 w-9 shrink-0 rounded-full text-xs font-semibold transition-colors ${sleepScore === level ? 'bg-[color:var(--theme-primary)] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+              >
+                {level}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 rounded-2xl bg-[#F9F6EF] px-4 py-3 text-sm text-gray-700">
+            <span className="font-semibold text-gray-900">{sleepSummary}</span>
+            <p className="mt-1 text-gray-600">{sleepDescriptions[sleepScore]}</p>
           </div>
         </div>
 
